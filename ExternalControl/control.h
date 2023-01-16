@@ -11,16 +11,16 @@ typedef struct SetWRAMInfo {
     uint32_t bank;
 } SetWRAMInfo;
 
-/// @brief A handler function for setting bytes in WRAM
-typedef void (*SetWRAMHandler)(SetWRAMInfo bytes);
-
-/// Register the handler that is called when WRAM should be set
-void RegisterSetWRAMHandler(SetWRAMHandler handler);
-/// Deregister the handler that was previously set
-void DeregisterSetWRAMHandler();
 /// Open a connection to the gRPC server and listen for updates to WRAM
 void StartListeningForWRAMUpdates();
 /// Close any open gRPC connections
 void StopListeningForWRAMUpdates();
+/// Pops an instance of `SetWRAMInfo` off the stack if one is available.
+/// If a null pointer is returned, there are none left on the stack. If a
+/// non-null pointer is returned, the caller is responsible for managing
+/// the memory of this pointer.
+SetWRAMInfo* PopAndCopySetWRAMStack();
+/// Release an instance of `SetWRAMInfo` returned by `PopAndCopySetWRAMStack`
+void ReleaseSetWRAMInfo(SetWRAMInfo *info);
 
 #endif /* CONTROL_H */

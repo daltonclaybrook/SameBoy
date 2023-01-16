@@ -17,10 +17,10 @@ const string GRPC_SERVER = "localhost:50051";
 
 // State variables
 
-SetWRAMHandler setWRAMHandler = nullptr;
-std::mutex handlerMutex;
 std::thread listenerThread;
 std::shared_ptr<Channel> channel;
+std::mutex setWRAMInfoStackMutex;
+std::vector<SetWRAMInfo> setWRAMInfoStack;
 
 // Functions
 
@@ -32,27 +32,15 @@ void _StartListeningOnThread(std::shared_ptr<Channel> channel) {
 
     SetWRAM msg;
     while (reader->Read(&msg)) {
-        std::lock_guard<std::mutex> lock(handlerMutex);
-        if (setWRAMHandler != nullptr) {
-            SetWRAMInfo info;
-            info.bank = msg.bank();
-            info.byteCount = msg.bytes().length();
-            info.byteOffset = msg.byte_offset();
-            info.bytes = (uint8_t *)msg.bytes().c_str();
-            setWRAMHandler(info);
-        }
+        std::lock_guard<std::mutex> lock(setWRAMInfoStackMutex);
+        auto bytesString = msg.bytes();
+        SetWRAMInfo info;
+        info.bank = msg.bank();
+        info.byteCount = bytesString.length();
+        info.byteOffset = msg.byte_offset();
+        memcpy(info.bytes, bytesString.c_str(), bytesString.length());
+        setWRAMInfoStack.push_back(info);
     }
-}
-
-/// Register the handler that is called when WRAM should be set
-void RegisterSetWRAMHandler(SetWRAMHandler handler) {
-    std::lock_guard<std::mutex> lock(handlerMutex);
-    setWRAMHandler = handler;
-}
-
-/// Deregister the handler that was previously set
-void DeregisterSetWRAMHandler() {
-    setWRAMHandler = nullptr;
 }
 
 /// Open a connection to the gRPC server and listen for updates to WRAM
@@ -71,4 +59,24 @@ void StopListeningForWRAMUpdates() {
     channel.swap(nullChannel);
     // Replace the thread with a null one, causing the old one to be terminated
     listenerThread = std::thread();
+}
+
+/// Pops an instance of `SetWRAMInfo` off the stack if one is available.
+/// If a null pointer is returned, there are none left on the stack.
+SetWRAMInfo* PopAndCopySetWRAMStack() {
+    std::lock_guard<std::mutex> lock(setWRAMInfoStackMutex);
+    if (setWRAMInfoStack.empty()) {
+        return nullptr;
+    }
+
+    SetWRAMInfo *info = (SetWRAMInfo *)malloc(sizeof(SetWRAMInfo));
+    memcpy(info, &setWRAMInfoStack[0], sizeof(SetWRAMInfo));
+    setWRAMInfoStack.erase(setWRAMInfoStack.begin());
+    return info;
+}
+
+/// Release an instance of `SetWRAMInfo` returned by `PopAndCopySetWRAMStack`
+void ReleaseSetWRAMInfo(SetWRAMInfo *info) {
+    free(info->bytes);
+    free(info);
 }
