@@ -236,6 +236,9 @@ void GB_free(GB_gameboy_t *gb)
 #endif
     GB_stop_audio_recording(gb);
         memset(gb, 0, sizeof(*gb));
+
+    /* External control */
+    StopListeningForWRAMUpdates();
 }
 
 void GB_dealloc(GB_gameboy_t *gb)
