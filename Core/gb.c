@@ -11,7 +11,7 @@
 #endif
 #include "random.h"
 #include "gb.h"
-
+#include "../ExternalControl/control.h"
 
 #ifdef GB_DISABLE_REWIND
 #define GB_rewind_free(...)
@@ -187,6 +187,9 @@ GB_gameboy_t *GB_init(GB_gameboy_t *gb, GB_model_t model)
     
     GB_reset(gb);
     load_default_border(gb);
+
+    /* External control */
+    StartListeningForWRAMUpdates();
     return gb;
 }
 
