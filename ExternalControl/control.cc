@@ -15,30 +15,23 @@ using google::protobuf::Empty;
 
 const string GRPC_SERVER = "localhost:50051";
 
-void doSomethingInteresting() {
-    ClientContext context;
-    printf("This is a test...\n");
-}
+// State variables
 
 SetWRAMHandler setWRAMHandler = nullptr;
 std::mutex handlerMutex;
 std::thread listenerThread;
+std::shared_ptr<Channel> channel;
 
-void _StartListeningOnThread() {
-    auto channel = grpc::CreateChannel(GRPC_SERVER, grpc::InsecureChannelCredentials());
+// Functions
+
+void _StartListeningOnThread(std::shared_ptr<Channel> channel) {
     auto service = ControlService::NewStub(channel);
 
     ClientContext context;
     auto reader = service->ListenSetWRAM(&context, Empty());
-    while (true) {
-        SetWRAM msg;
-        bool success = reader->Read(&msg);
-        if (!success) {
-            printf("Failed to read message. Sleeping...\n");
-            std::this_thread::sleep_for(std::chrono::seconds(10));
-            continue;
-        }
 
+    SetWRAM msg;
+    while (reader->Read(&msg)) {
         std::lock_guard<std::mutex> lock(handlerMutex);
         if (setWRAMHandler != nullptr) {
             SetWRAMInfo info;
@@ -64,12 +57,18 @@ void DeregisterSetWRAMHandler() {
 
 /// Open a connection to the gRPC server and listen for updates to WRAM
 void StartListeningForWRAMUpdates() {
-    std::thread _listenerThread(_StartListeningOnThread, nullptr);
+    auto _channel = grpc::CreateChannel(GRPC_SERVER, grpc::InsecureChannelCredentials());
+    channel.swap(_channel);
+
+    std::thread _listenerThread(_StartListeningOnThread, _channel);
     listenerThread = std::move(_listenerThread);
 }
 
 /// Close any open gRPC connections
 void StopListeningForWRAMUpdates() {
+    // Replace the channel with a null one
+    std::shared_ptr<Channel> nullChannel;
+    channel.swap(nullChannel);
     // Replace the thread with a null one, causing the old one to be terminated
     listenerThread = std::thread();
 }
