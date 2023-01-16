@@ -13,7 +13,7 @@ using grpc::Channel;
 using grpc::ClientContext;
 using google::protobuf::Empty;
 
-const string GRPC_SERVER = "localhost:50051";
+const string GRPC_SERVER = "localhost:8080";
 
 // State variables
 
@@ -24,9 +24,7 @@ std::vector<SetWRAMInfo> setWRAMInfoStack;
 
 // Functions
 
-void _StartListeningOnThread(std::shared_ptr<Channel> channel) {
-    auto service = ControlService::NewStub(channel);
-
+void _StartListeningOnThread(std::unique_ptr<ControlService::Stub> service) {
     ClientContext context;
     auto reader = service->ListenSetWRAM(&context, Empty());
 
@@ -38,7 +36,8 @@ void _StartListeningOnThread(std::shared_ptr<Channel> channel) {
         info.bank = msg.bank();
         info.byteCount = bytesString.length();
         info.byteOffset = msg.byte_offset();
-        memcpy(info.bytes, bytesString.c_str(), bytesString.length());
+        info.bytes = (uint8_t *)malloc(sizeof(uint8_t) * info.byteCount);
+        memcpy(info.bytes, bytesString.c_str(), info.byteCount);
         setWRAMInfoStack.push_back(info);
     }
 }
@@ -48,7 +47,8 @@ void StartListeningForWRAMUpdates() {
     auto _channel = grpc::CreateChannel(GRPC_SERVER, grpc::InsecureChannelCredentials());
     channel.swap(_channel);
 
-    std::thread _listenerThread(_StartListeningOnThread, _channel);
+    auto service = ControlService::NewStub(channel);
+    std::thread _listenerThread(_StartListeningOnThread, std::move(service));
     listenerThread = std::move(_listenerThread);
 }
 
@@ -57,8 +57,6 @@ void StopListeningForWRAMUpdates() {
     // Replace the channel with a null one
     std::shared_ptr<Channel> nullChannel;
     channel.swap(nullChannel);
-    // Replace the thread with a null one, causing the old one to be terminated
-    listenerThread = std::thread();
 }
 
 /// Pops an instance of `SetWRAMInfo` off the stack if one is available.
