@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+service ControlService {
+    rpc ListenSetWRAM(google.protobuf.Empty) returns (stream SetWRAM);
+}
+
+message SetWRAM {
+    /// The 0-based memory bank to use. 0-1 are available on DMG, and 0-7 are available on CGB.
+    uint32 bank = 1;
+    /// The offset from the start of the memory bank where the first byte should be stored.
+    uint32 byte_offset = 2;
+    /// The list of bytes to write to WRAM, starting at the location specified by `byte_offset`.
+    bytes bytes = 3;
+}

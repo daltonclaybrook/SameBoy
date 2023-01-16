@@ -249,7 +249,7 @@ all: cocoa sdl tester libretro
 # Get a list of our source files and their respective object file targets
 
 CORE_SOURCES := $(shell ls Core/*.c)
-CORE_SOURCES += $(shell ls ExternalControl/*.cpp)
+CORE_SOURCES += $(shell ls ExternalControl/*.cc)
 SDL_SOURCES := $(shell ls SDL/*.c) $(OPEN_DIALOG) $(patsubst %,SDL/audio/%.c,$(SDL_AUDIO_DRIVERS))
 TESTER_SOURCES := $(shell ls Tester/*.c)
 
@@ -296,7 +296,7 @@ $(OBJ)/%.c.dep: %.c
 	-@$(MKDIR) -p $(dir $@)
 	$(CC) $(CFLAGS) -MT $(OBJ)/$^.o -M $^ -c -o $@
 
-$(OBJ)/%.cpp.dep: %.cpp
+$(OBJ)/%.cc.dep: %.cc
 	-@$(MKDIR) -p $(dir $@)
 	$(CC) $(CPPFLAGS) -I$(CPP_DEPS)/include -MT $(OBJ)/$^.o -M $^ -c -o $@
 
@@ -319,7 +319,7 @@ $(OBJ)/%.c.o: %.c
 	-@$(MKDIR) -p $(dir $@)
 	$(CC) $(CFLAGS) $(FAT_FLAGS) -c $< -o $@
 
-$(OBJ)/ExternalControl/%.cpp.o: ExternalControl/%.cpp
+$(OBJ)/ExternalControl/%.cc.o: ExternalControl/%.cc
 	-@$(MKDIR) -p $(dir $@)
 	$(CC) $(CPPFLAGS) $(FAT_FLAGS) -I$(CPP_DEPS)/include -DGB_INTERNAL -c $< -o $@
 
