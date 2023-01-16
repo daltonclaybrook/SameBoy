@@ -2,6 +2,7 @@
 #include <stdbool.h>
 #include <assert.h>
 #include "gb.h"
+#include "../ExternalControl/control.h"
 
 
 typedef void opcode_t(GB_gameboy_t *gb, uint8_t opcode);
@@ -1569,6 +1570,20 @@ static void cb_prefix(GB_gameboy_t *gb, uint8_t opcode)
     }
 }
 
+/// @brief Update WRAM if necessary based on the external control system
+void handle_external_set_wram(GB_gameboy_t *gb) {
+    SetWRAMInfo *info = PopAndCopySetWRAMStack();
+    while (info != NULL) {
+        uint16_t base_addr = 0xC000; // WRAM
+        for (uint16_t i = 0; i < info->byteCount; i++) {
+            GB_write_explicit_banked_ram(gb, base_addr + i, info->bank, info->bytes[i]);
+        }
+
+        ReleaseSetWRAMInfo(info);
+        info = PopAndCopySetWRAMStack();
+    }
+}
+
 static opcode_t *opcodes[256] = {
 /*  X0          X1          X2          X3          X4          X5          X6          X7                */
 /*  X8          X9          Xa          Xb          Xc          Xd          Xe          Xf                */
@@ -1716,6 +1731,9 @@ void GB_cpu_run(GB_gameboy_t *gb)
         }
         opcodes[opcode](gb, opcode);
     }
+
+    /* External control */
+    handle_external_set_wram(gb);
     
     flush_pending_cycles(gb);
 }

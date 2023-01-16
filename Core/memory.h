@@ -19,4 +19,7 @@ internal void GB_trigger_oam_bug(GB_gameboy_t *gb, uint16_t address);
 internal uint8_t GB_read_oam(GB_gameboy_t *gb, uint8_t addr);
 #endif
 
+// Exposed for external control
+void GB_write_explicit_banked_ram(GB_gameboy_t *gb, uint16_t addr, uint8_t bank, uint8_t value);
+
 #endif /* memory_h */
