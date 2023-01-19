@@ -3,14 +3,38 @@ syntax = "proto3";
 import "google/protobuf/empty.proto";
 
 service ControlService {
-    rpc ListenSetWRAM(google.protobuf.Empty) returns (stream SetWRAM);
+    /// Listen for the server to instruct the emulator to set bytes in WRAM
+    rpc ListenSetWRAM(google.protobuf.Empty) returns (stream WRAMByteRange);
+    /// Listen for the server to instruct the emulator to watch a set of byte ranges
+    /// for changes and call the server on change. When a new `WatchedWRAM` is returned
+    /// by the server, stop watching previous ranges.
+    rpc ListenWatchWRAM(google.protobuf.Empty) returns (stream WatchedWRAM);
+    /// Send watched byte ranges to the server
+    rpc WatchedWRAMDidChange(WRAMByteRange) returns (google.protobuf.Empty);
 }
 
-message SetWRAM {
+/// Represents a range of bytes in WRAM
+message WRAMByteRange {
     /// The 0-based memory bank to use. 0-1 are available on DMG, and 0-7 are available on CGB.
     uint32 bank = 1;
     /// The offset from the start of the memory bank where the first byte should be stored.
     uint32 byte_offset = 2;
     /// The list of bytes to write to WRAM, starting at the location specified by `byte_offset`.
     bytes bytes = 3;
+}
+
+/// Sent by the server to instruct the emulator to read and send bytes from WRAM when they change
+message WatchedWRAM {
+    /// The list of byte ranges to watch
+    repeated WatchedWRAMRange ranges = 1;
+}
+
+/// Represents a range of bytes to watch in WRAM
+message WatchedWRAMRange {
+    /// The 0-based memory bank to use. 0-1 are available on DMG, and 0-7 are available on CGB.
+    uint32 bank = 1;
+    /// The offset from the start of the memory bank where the first byte is stored.
+    uint32 byte_offset = 2;
+    /// The length of bytes to watch
+    uint32 byte_length = 3;
 }
