@@ -28,7 +28,7 @@ void _StartListeningOnThread(std::unique_ptr<ControlService::Stub> service) {
     ClientContext context;
     auto reader = service->ListenSetWRAM(&context, Empty());
 
-    SetWRAM msg;
+    WRAMByteRange msg;
     while (reader->Read(&msg)) {
         std::lock_guard<std::mutex> lock(setWRAMInfoStackMutex);
         auto bytesString = msg.bytes();

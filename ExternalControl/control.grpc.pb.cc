@@ -22,6 +22,8 @@
 
 static const char* ControlService_method_names[] = {
   "/ControlService/ListenSetWRAM",
+  "/ControlService/ListenWatchWRAM",
+  "/ControlService/WatchedWRAMDidChange",
 };
 
 std::unique_ptr< ControlService::Stub> ControlService::NewStub(const std::shared_ptr< ::grpc::ChannelInterface>& channel, const ::grpc::StubOptions& options) {
@@ -32,44 +34,119 @@ std::unique_ptr< ControlService::Stub> ControlService::NewStub(const std::shared
 
 ControlService::Stub::Stub(const std::shared_ptr< ::grpc::ChannelInterface>& channel, const ::grpc::StubOptions& options)
   : channel_(channel), rpcmethod_ListenSetWRAM_(ControlService_method_names[0], options.suffix_for_stats(),::grpc::internal::RpcMethod::SERVER_STREAMING, channel)
+  , rpcmethod_ListenWatchWRAM_(ControlService_method_names[1], options.suffix_for_stats(),::grpc::internal::RpcMethod::SERVER_STREAMING, channel)
+  , rpcmethod_WatchedWRAMDidChange_(ControlService_method_names[2], options.suffix_for_stats(),::grpc::internal::RpcMethod::NORMAL_RPC, channel)
   {}
 
-::grpc::ClientReader< ::SetWRAM>* ControlService::Stub::ListenSetWRAMRaw(::grpc::ClientContext* context, const ::google::protobuf::Empty& request) {
-  return ::grpc::internal::ClientReaderFactory< ::SetWRAM>::Create(channel_.get(), rpcmethod_ListenSetWRAM_, context, request);
+::grpc::ClientReader< ::WRAMByteRange>* ControlService::Stub::ListenSetWRAMRaw(::grpc::ClientContext* context, const ::google::protobuf::Empty& request) {
+  return ::grpc::internal::ClientReaderFactory< ::WRAMByteRange>::Create(channel_.get(), rpcmethod_ListenSetWRAM_, context, request);
 }
 
-void ControlService::Stub::async::ListenSetWRAM(::grpc::ClientContext* context, const ::google::protobuf::Empty* request, ::grpc::ClientReadReactor< ::SetWRAM>* reactor) {
-  ::grpc::internal::ClientCallbackReaderFactory< ::SetWRAM>::Create(stub_->channel_.get(), stub_->rpcmethod_ListenSetWRAM_, context, request, reactor);
+void ControlService::Stub::async::ListenSetWRAM(::grpc::ClientContext* context, const ::google::protobuf::Empty* request, ::grpc::ClientReadReactor< ::WRAMByteRange>* reactor) {
+  ::grpc::internal::ClientCallbackReaderFactory< ::WRAMByteRange>::Create(stub_->channel_.get(), stub_->rpcmethod_ListenSetWRAM_, context, request, reactor);
 }
 
-::grpc::ClientAsyncReader< ::SetWRAM>* ControlService::Stub::AsyncListenSetWRAMRaw(::grpc::ClientContext* context, const ::google::protobuf::Empty& request, ::grpc::CompletionQueue* cq, void* tag) {
-  return ::grpc::internal::ClientAsyncReaderFactory< ::SetWRAM>::Create(channel_.get(), cq, rpcmethod_ListenSetWRAM_, context, request, true, tag);
+::grpc::ClientAsyncReader< ::WRAMByteRange>* ControlService::Stub::AsyncListenSetWRAMRaw(::grpc::ClientContext* context, const ::google::protobuf::Empty& request, ::grpc::CompletionQueue* cq, void* tag) {
+  return ::grpc::internal::ClientAsyncReaderFactory< ::WRAMByteRange>::Create(channel_.get(), cq, rpcmethod_ListenSetWRAM_, context, request, true, tag);
 }
 
-::grpc::ClientAsyncReader< ::SetWRAM>* ControlService::Stub::PrepareAsyncListenSetWRAMRaw(::grpc::ClientContext* context, const ::google::protobuf::Empty& request, ::grpc::CompletionQueue* cq) {
-  return ::grpc::internal::ClientAsyncReaderFactory< ::SetWRAM>::Create(channel_.get(), cq, rpcmethod_ListenSetWRAM_, context, request, false, nullptr);
+::grpc::ClientAsyncReader< ::WRAMByteRange>* ControlService::Stub::PrepareAsyncListenSetWRAMRaw(::grpc::ClientContext* context, const ::google::protobuf::Empty& request, ::grpc::CompletionQueue* cq) {
+  return ::grpc::internal::ClientAsyncReaderFactory< ::WRAMByteRange>::Create(channel_.get(), cq, rpcmethod_ListenSetWRAM_, context, request, false, nullptr);
+}
+
+::grpc::ClientReader< ::WatchedWRAM>* ControlService::Stub::ListenWatchWRAMRaw(::grpc::ClientContext* context, const ::google::protobuf::Empty& request) {
+  return ::grpc::internal::ClientReaderFactory< ::WatchedWRAM>::Create(channel_.get(), rpcmethod_ListenWatchWRAM_, context, request);
+}
+
+void ControlService::Stub::async::ListenWatchWRAM(::grpc::ClientContext* context, const ::google::protobuf::Empty* request, ::grpc::ClientReadReactor< ::WatchedWRAM>* reactor) {
+  ::grpc::internal::ClientCallbackReaderFactory< ::WatchedWRAM>::Create(stub_->channel_.get(), stub_->rpcmethod_ListenWatchWRAM_, context, request, reactor);
+}
+
+::grpc::ClientAsyncReader< ::WatchedWRAM>* ControlService::Stub::AsyncListenWatchWRAMRaw(::grpc::ClientContext* context, const ::google::protobuf::Empty& request, ::grpc::CompletionQueue* cq, void* tag) {
+  return ::grpc::internal::ClientAsyncReaderFactory< ::WatchedWRAM>::Create(channel_.get(), cq, rpcmethod_ListenWatchWRAM_, context, request, true, tag);
+}
+
+::grpc::ClientAsyncReader< ::WatchedWRAM>* ControlService::Stub::PrepareAsyncListenWatchWRAMRaw(::grpc::ClientContext* context, const ::google::protobuf::Empty& request, ::grpc::CompletionQueue* cq) {
+  return ::grpc::internal::ClientAsyncReaderFactory< ::WatchedWRAM>::Create(channel_.get(), cq, rpcmethod_ListenWatchWRAM_, context, request, false, nullptr);
+}
+
+::grpc::Status ControlService::Stub::WatchedWRAMDidChange(::grpc::ClientContext* context, const ::WRAMByteRange& request, ::google::protobuf::Empty* response) {
+  return ::grpc::internal::BlockingUnaryCall< ::WRAMByteRange, ::google::protobuf::Empty, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), rpcmethod_WatchedWRAMDidChange_, context, request, response);
+}
+
+void ControlService::Stub::async::WatchedWRAMDidChange(::grpc::ClientContext* context, const ::WRAMByteRange* request, ::google::protobuf::Empty* response, std::function<void(::grpc::Status)> f) {
+  ::grpc::internal::CallbackUnaryCall< ::WRAMByteRange, ::google::protobuf::Empty, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_WatchedWRAMDidChange_, context, request, response, std::move(f));
+}
+
+void ControlService::Stub::async::WatchedWRAMDidChange(::grpc::ClientContext* context, const ::WRAMByteRange* request, ::google::protobuf::Empty* response, ::grpc::ClientUnaryReactor* reactor) {
+  ::grpc::internal::ClientCallbackUnaryFactory::Create< ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_WatchedWRAMDidChange_, context, request, response, reactor);
+}
+
+::grpc::ClientAsyncResponseReader< ::google::protobuf::Empty>* ControlService::Stub::PrepareAsyncWatchedWRAMDidChangeRaw(::grpc::ClientContext* context, const ::WRAMByteRange& request, ::grpc::CompletionQueue* cq) {
+  return ::grpc::internal::ClientAsyncResponseReaderHelper::Create< ::google::protobuf::Empty, ::WRAMByteRange, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), cq, rpcmethod_WatchedWRAMDidChange_, context, request);
+}
+
+::grpc::ClientAsyncResponseReader< ::google::protobuf::Empty>* ControlService::Stub::AsyncWatchedWRAMDidChangeRaw(::grpc::ClientContext* context, const ::WRAMByteRange& request, ::grpc::CompletionQueue* cq) {
+  auto* result =
+    this->PrepareAsyncWatchedWRAMDidChangeRaw(context, request, cq);
+  result->StartCall();
+  return result;
 }
 
 ControlService::Service::Service() {
   AddMethod(new ::grpc::internal::RpcServiceMethod(
       ControlService_method_names[0],
       ::grpc::internal::RpcMethod::SERVER_STREAMING,
-      new ::grpc::internal::ServerStreamingHandler< ControlService::Service, ::google::protobuf::Empty, ::SetWRAM>(
+      new ::grpc::internal::ServerStreamingHandler< ControlService::Service, ::google::protobuf::Empty, ::WRAMByteRange>(
           [](ControlService::Service* service,
              ::grpc::ServerContext* ctx,
              const ::google::protobuf::Empty* req,
-             ::grpc::ServerWriter<::SetWRAM>* writer) {
+             ::grpc::ServerWriter<::WRAMByteRange>* writer) {
                return service->ListenSetWRAM(ctx, req, writer);
+             }, this)));
+  AddMethod(new ::grpc::internal::RpcServiceMethod(
+      ControlService_method_names[1],
+      ::grpc::internal::RpcMethod::SERVER_STREAMING,
+      new ::grpc::internal::ServerStreamingHandler< ControlService::Service, ::google::protobuf::Empty, ::WatchedWRAM>(
+          [](ControlService::Service* service,
+             ::grpc::ServerContext* ctx,
+             const ::google::protobuf::Empty* req,
+             ::grpc::ServerWriter<::WatchedWRAM>* writer) {
+               return service->ListenWatchWRAM(ctx, req, writer);
+             }, this)));
+  AddMethod(new ::grpc::internal::RpcServiceMethod(
+      ControlService_method_names[2],
+      ::grpc::internal::RpcMethod::NORMAL_RPC,
+      new ::grpc::internal::RpcMethodHandler< ControlService::Service, ::WRAMByteRange, ::google::protobuf::Empty, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(
+          [](ControlService::Service* service,
+             ::grpc::ServerContext* ctx,
+             const ::WRAMByteRange* req,
+             ::google::protobuf::Empty* resp) {
+               return service->WatchedWRAMDidChange(ctx, req, resp);
              }, this)));
 }
 
 ControlService::Service::~Service() {
 }
 
-::grpc::Status ControlService::Service::ListenSetWRAM(::grpc::ServerContext* context, const ::google::protobuf::Empty* request, ::grpc::ServerWriter< ::SetWRAM>* writer) {
+::grpc::Status ControlService::Service::ListenSetWRAM(::grpc::ServerContext* context, const ::google::protobuf::Empty* request, ::grpc::ServerWriter< ::WRAMByteRange>* writer) {
   (void) context;
   (void) request;
   (void) writer;
+  return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+}
+
+::grpc::Status ControlService::Service::ListenWatchWRAM(::grpc::ServerContext* context, const ::google::protobuf::Empty* request, ::grpc::ServerWriter< ::WatchedWRAM>* writer) {
+  (void) context;
+  (void) request;
+  (void) writer;
+  return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+}
+
+::grpc::Status ControlService::Service::WatchedWRAMDidChange(::grpc::ServerContext* context, const ::WRAMByteRange* request, ::google::protobuf::Empty* response) {
+  (void) context;
+  (void) request;
+  (void) response;
   return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
 }
 

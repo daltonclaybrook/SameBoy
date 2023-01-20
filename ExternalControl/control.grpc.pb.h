@@ -33,44 +33,97 @@ class ControlService final {
   class StubInterface {
    public:
     virtual ~StubInterface() {}
-    std::unique_ptr< ::grpc::ClientReaderInterface< ::SetWRAM>> ListenSetWRAM(::grpc::ClientContext* context, const ::google::protobuf::Empty& request) {
-      return std::unique_ptr< ::grpc::ClientReaderInterface< ::SetWRAM>>(ListenSetWRAMRaw(context, request));
+    // / Listen for the server to instruct the emulator to set bytes in WRAM
+    std::unique_ptr< ::grpc::ClientReaderInterface< ::WRAMByteRange>> ListenSetWRAM(::grpc::ClientContext* context, const ::google::protobuf::Empty& request) {
+      return std::unique_ptr< ::grpc::ClientReaderInterface< ::WRAMByteRange>>(ListenSetWRAMRaw(context, request));
     }
-    std::unique_ptr< ::grpc::ClientAsyncReaderInterface< ::SetWRAM>> AsyncListenSetWRAM(::grpc::ClientContext* context, const ::google::protobuf::Empty& request, ::grpc::CompletionQueue* cq, void* tag) {
-      return std::unique_ptr< ::grpc::ClientAsyncReaderInterface< ::SetWRAM>>(AsyncListenSetWRAMRaw(context, request, cq, tag));
+    std::unique_ptr< ::grpc::ClientAsyncReaderInterface< ::WRAMByteRange>> AsyncListenSetWRAM(::grpc::ClientContext* context, const ::google::protobuf::Empty& request, ::grpc::CompletionQueue* cq, void* tag) {
+      return std::unique_ptr< ::grpc::ClientAsyncReaderInterface< ::WRAMByteRange>>(AsyncListenSetWRAMRaw(context, request, cq, tag));
     }
-    std::unique_ptr< ::grpc::ClientAsyncReaderInterface< ::SetWRAM>> PrepareAsyncListenSetWRAM(::grpc::ClientContext* context, const ::google::protobuf::Empty& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncReaderInterface< ::SetWRAM>>(PrepareAsyncListenSetWRAMRaw(context, request, cq));
+    std::unique_ptr< ::grpc::ClientAsyncReaderInterface< ::WRAMByteRange>> PrepareAsyncListenSetWRAM(::grpc::ClientContext* context, const ::google::protobuf::Empty& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncReaderInterface< ::WRAMByteRange>>(PrepareAsyncListenSetWRAMRaw(context, request, cq));
+    }
+    // / Listen for the server to instruct the emulator to watch a set of byte ranges
+    // / for changes and call the server on change. When a new `WatchedWRAM` is returned
+    // / by the server, stop watching previous ranges.
+    std::unique_ptr< ::grpc::ClientReaderInterface< ::WatchedWRAM>> ListenWatchWRAM(::grpc::ClientContext* context, const ::google::protobuf::Empty& request) {
+      return std::unique_ptr< ::grpc::ClientReaderInterface< ::WatchedWRAM>>(ListenWatchWRAMRaw(context, request));
+    }
+    std::unique_ptr< ::grpc::ClientAsyncReaderInterface< ::WatchedWRAM>> AsyncListenWatchWRAM(::grpc::ClientContext* context, const ::google::protobuf::Empty& request, ::grpc::CompletionQueue* cq, void* tag) {
+      return std::unique_ptr< ::grpc::ClientAsyncReaderInterface< ::WatchedWRAM>>(AsyncListenWatchWRAMRaw(context, request, cq, tag));
+    }
+    std::unique_ptr< ::grpc::ClientAsyncReaderInterface< ::WatchedWRAM>> PrepareAsyncListenWatchWRAM(::grpc::ClientContext* context, const ::google::protobuf::Empty& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncReaderInterface< ::WatchedWRAM>>(PrepareAsyncListenWatchWRAMRaw(context, request, cq));
+    }
+    // / Send watched byte ranges to the server
+    virtual ::grpc::Status WatchedWRAMDidChange(::grpc::ClientContext* context, const ::WRAMByteRange& request, ::google::protobuf::Empty* response) = 0;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::google::protobuf::Empty>> AsyncWatchedWRAMDidChange(::grpc::ClientContext* context, const ::WRAMByteRange& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::google::protobuf::Empty>>(AsyncWatchedWRAMDidChangeRaw(context, request, cq));
+    }
+    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::google::protobuf::Empty>> PrepareAsyncWatchedWRAMDidChange(::grpc::ClientContext* context, const ::WRAMByteRange& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::google::protobuf::Empty>>(PrepareAsyncWatchedWRAMDidChangeRaw(context, request, cq));
     }
     class async_interface {
      public:
       virtual ~async_interface() {}
-      virtual void ListenSetWRAM(::grpc::ClientContext* context, const ::google::protobuf::Empty* request, ::grpc::ClientReadReactor< ::SetWRAM>* reactor) = 0;
+      // / Listen for the server to instruct the emulator to set bytes in WRAM
+      virtual void ListenSetWRAM(::grpc::ClientContext* context, const ::google::protobuf::Empty* request, ::grpc::ClientReadReactor< ::WRAMByteRange>* reactor) = 0;
+      // / Listen for the server to instruct the emulator to watch a set of byte ranges
+      // / for changes and call the server on change. When a new `WatchedWRAM` is returned
+      // / by the server, stop watching previous ranges.
+      virtual void ListenWatchWRAM(::grpc::ClientContext* context, const ::google::protobuf::Empty* request, ::grpc::ClientReadReactor< ::WatchedWRAM>* reactor) = 0;
+      // / Send watched byte ranges to the server
+      virtual void WatchedWRAMDidChange(::grpc::ClientContext* context, const ::WRAMByteRange* request, ::google::protobuf::Empty* response, std::function<void(::grpc::Status)>) = 0;
+      virtual void WatchedWRAMDidChange(::grpc::ClientContext* context, const ::WRAMByteRange* request, ::google::protobuf::Empty* response, ::grpc::ClientUnaryReactor* reactor) = 0;
     };
     typedef class async_interface experimental_async_interface;
     virtual class async_interface* async() { return nullptr; }
     class async_interface* experimental_async() { return async(); }
    private:
-    virtual ::grpc::ClientReaderInterface< ::SetWRAM>* ListenSetWRAMRaw(::grpc::ClientContext* context, const ::google::protobuf::Empty& request) = 0;
-    virtual ::grpc::ClientAsyncReaderInterface< ::SetWRAM>* AsyncListenSetWRAMRaw(::grpc::ClientContext* context, const ::google::protobuf::Empty& request, ::grpc::CompletionQueue* cq, void* tag) = 0;
-    virtual ::grpc::ClientAsyncReaderInterface< ::SetWRAM>* PrepareAsyncListenSetWRAMRaw(::grpc::ClientContext* context, const ::google::protobuf::Empty& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientReaderInterface< ::WRAMByteRange>* ListenSetWRAMRaw(::grpc::ClientContext* context, const ::google::protobuf::Empty& request) = 0;
+    virtual ::grpc::ClientAsyncReaderInterface< ::WRAMByteRange>* AsyncListenSetWRAMRaw(::grpc::ClientContext* context, const ::google::protobuf::Empty& request, ::grpc::CompletionQueue* cq, void* tag) = 0;
+    virtual ::grpc::ClientAsyncReaderInterface< ::WRAMByteRange>* PrepareAsyncListenSetWRAMRaw(::grpc::ClientContext* context, const ::google::protobuf::Empty& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientReaderInterface< ::WatchedWRAM>* ListenWatchWRAMRaw(::grpc::ClientContext* context, const ::google::protobuf::Empty& request) = 0;
+    virtual ::grpc::ClientAsyncReaderInterface< ::WatchedWRAM>* AsyncListenWatchWRAMRaw(::grpc::ClientContext* context, const ::google::protobuf::Empty& request, ::grpc::CompletionQueue* cq, void* tag) = 0;
+    virtual ::grpc::ClientAsyncReaderInterface< ::WatchedWRAM>* PrepareAsyncListenWatchWRAMRaw(::grpc::ClientContext* context, const ::google::protobuf::Empty& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientAsyncResponseReaderInterface< ::google::protobuf::Empty>* AsyncWatchedWRAMDidChangeRaw(::grpc::ClientContext* context, const ::WRAMByteRange& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientAsyncResponseReaderInterface< ::google::protobuf::Empty>* PrepareAsyncWatchedWRAMDidChangeRaw(::grpc::ClientContext* context, const ::WRAMByteRange& request, ::grpc::CompletionQueue* cq) = 0;
   };
   class Stub final : public StubInterface {
    public:
     Stub(const std::shared_ptr< ::grpc::ChannelInterface>& channel, const ::grpc::StubOptions& options = ::grpc::StubOptions());
-    std::unique_ptr< ::grpc::ClientReader< ::SetWRAM>> ListenSetWRAM(::grpc::ClientContext* context, const ::google::protobuf::Empty& request) {
-      return std::unique_ptr< ::grpc::ClientReader< ::SetWRAM>>(ListenSetWRAMRaw(context, request));
+    std::unique_ptr< ::grpc::ClientReader< ::WRAMByteRange>> ListenSetWRAM(::grpc::ClientContext* context, const ::google::protobuf::Empty& request) {
+      return std::unique_ptr< ::grpc::ClientReader< ::WRAMByteRange>>(ListenSetWRAMRaw(context, request));
     }
-    std::unique_ptr< ::grpc::ClientAsyncReader< ::SetWRAM>> AsyncListenSetWRAM(::grpc::ClientContext* context, const ::google::protobuf::Empty& request, ::grpc::CompletionQueue* cq, void* tag) {
-      return std::unique_ptr< ::grpc::ClientAsyncReader< ::SetWRAM>>(AsyncListenSetWRAMRaw(context, request, cq, tag));
+    std::unique_ptr< ::grpc::ClientAsyncReader< ::WRAMByteRange>> AsyncListenSetWRAM(::grpc::ClientContext* context, const ::google::protobuf::Empty& request, ::grpc::CompletionQueue* cq, void* tag) {
+      return std::unique_ptr< ::grpc::ClientAsyncReader< ::WRAMByteRange>>(AsyncListenSetWRAMRaw(context, request, cq, tag));
     }
-    std::unique_ptr< ::grpc::ClientAsyncReader< ::SetWRAM>> PrepareAsyncListenSetWRAM(::grpc::ClientContext* context, const ::google::protobuf::Empty& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncReader< ::SetWRAM>>(PrepareAsyncListenSetWRAMRaw(context, request, cq));
+    std::unique_ptr< ::grpc::ClientAsyncReader< ::WRAMByteRange>> PrepareAsyncListenSetWRAM(::grpc::ClientContext* context, const ::google::protobuf::Empty& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncReader< ::WRAMByteRange>>(PrepareAsyncListenSetWRAMRaw(context, request, cq));
+    }
+    std::unique_ptr< ::grpc::ClientReader< ::WatchedWRAM>> ListenWatchWRAM(::grpc::ClientContext* context, const ::google::protobuf::Empty& request) {
+      return std::unique_ptr< ::grpc::ClientReader< ::WatchedWRAM>>(ListenWatchWRAMRaw(context, request));
+    }
+    std::unique_ptr< ::grpc::ClientAsyncReader< ::WatchedWRAM>> AsyncListenWatchWRAM(::grpc::ClientContext* context, const ::google::protobuf::Empty& request, ::grpc::CompletionQueue* cq, void* tag) {
+      return std::unique_ptr< ::grpc::ClientAsyncReader< ::WatchedWRAM>>(AsyncListenWatchWRAMRaw(context, request, cq, tag));
+    }
+    std::unique_ptr< ::grpc::ClientAsyncReader< ::WatchedWRAM>> PrepareAsyncListenWatchWRAM(::grpc::ClientContext* context, const ::google::protobuf::Empty& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncReader< ::WatchedWRAM>>(PrepareAsyncListenWatchWRAMRaw(context, request, cq));
+    }
+    ::grpc::Status WatchedWRAMDidChange(::grpc::ClientContext* context, const ::WRAMByteRange& request, ::google::protobuf::Empty* response) override;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::google::protobuf::Empty>> AsyncWatchedWRAMDidChange(::grpc::ClientContext* context, const ::WRAMByteRange& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::google::protobuf::Empty>>(AsyncWatchedWRAMDidChangeRaw(context, request, cq));
+    }
+    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::google::protobuf::Empty>> PrepareAsyncWatchedWRAMDidChange(::grpc::ClientContext* context, const ::WRAMByteRange& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::google::protobuf::Empty>>(PrepareAsyncWatchedWRAMDidChangeRaw(context, request, cq));
     }
     class async final :
       public StubInterface::async_interface {
      public:
-      void ListenSetWRAM(::grpc::ClientContext* context, const ::google::protobuf::Empty* request, ::grpc::ClientReadReactor< ::SetWRAM>* reactor) override;
+      void ListenSetWRAM(::grpc::ClientContext* context, const ::google::protobuf::Empty* request, ::grpc::ClientReadReactor< ::WRAMByteRange>* reactor) override;
+      void ListenWatchWRAM(::grpc::ClientContext* context, const ::google::protobuf::Empty* request, ::grpc::ClientReadReactor< ::WatchedWRAM>* reactor) override;
+      void WatchedWRAMDidChange(::grpc::ClientContext* context, const ::WRAMByteRange* request, ::google::protobuf::Empty* response, std::function<void(::grpc::Status)>) override;
+      void WatchedWRAMDidChange(::grpc::ClientContext* context, const ::WRAMByteRange* request, ::google::protobuf::Empty* response, ::grpc::ClientUnaryReactor* reactor) override;
      private:
       friend class Stub;
       explicit async(Stub* stub): stub_(stub) { }
@@ -82,10 +135,17 @@ class ControlService final {
    private:
     std::shared_ptr< ::grpc::ChannelInterface> channel_;
     class async async_stub_{this};
-    ::grpc::ClientReader< ::SetWRAM>* ListenSetWRAMRaw(::grpc::ClientContext* context, const ::google::protobuf::Empty& request) override;
-    ::grpc::ClientAsyncReader< ::SetWRAM>* AsyncListenSetWRAMRaw(::grpc::ClientContext* context, const ::google::protobuf::Empty& request, ::grpc::CompletionQueue* cq, void* tag) override;
-    ::grpc::ClientAsyncReader< ::SetWRAM>* PrepareAsyncListenSetWRAMRaw(::grpc::ClientContext* context, const ::google::protobuf::Empty& request, ::grpc::CompletionQueue* cq) override;
+    ::grpc::ClientReader< ::WRAMByteRange>* ListenSetWRAMRaw(::grpc::ClientContext* context, const ::google::protobuf::Empty& request) override;
+    ::grpc::ClientAsyncReader< ::WRAMByteRange>* AsyncListenSetWRAMRaw(::grpc::ClientContext* context, const ::google::protobuf::Empty& request, ::grpc::CompletionQueue* cq, void* tag) override;
+    ::grpc::ClientAsyncReader< ::WRAMByteRange>* PrepareAsyncListenSetWRAMRaw(::grpc::ClientContext* context, const ::google::protobuf::Empty& request, ::grpc::CompletionQueue* cq) override;
+    ::grpc::ClientReader< ::WatchedWRAM>* ListenWatchWRAMRaw(::grpc::ClientContext* context, const ::google::protobuf::Empty& request) override;
+    ::grpc::ClientAsyncReader< ::WatchedWRAM>* AsyncListenWatchWRAMRaw(::grpc::ClientContext* context, const ::google::protobuf::Empty& request, ::grpc::CompletionQueue* cq, void* tag) override;
+    ::grpc::ClientAsyncReader< ::WatchedWRAM>* PrepareAsyncListenWatchWRAMRaw(::grpc::ClientContext* context, const ::google::protobuf::Empty& request, ::grpc::CompletionQueue* cq) override;
+    ::grpc::ClientAsyncResponseReader< ::google::protobuf::Empty>* AsyncWatchedWRAMDidChangeRaw(::grpc::ClientContext* context, const ::WRAMByteRange& request, ::grpc::CompletionQueue* cq) override;
+    ::grpc::ClientAsyncResponseReader< ::google::protobuf::Empty>* PrepareAsyncWatchedWRAMDidChangeRaw(::grpc::ClientContext* context, const ::WRAMByteRange& request, ::grpc::CompletionQueue* cq) override;
     const ::grpc::internal::RpcMethod rpcmethod_ListenSetWRAM_;
+    const ::grpc::internal::RpcMethod rpcmethod_ListenWatchWRAM_;
+    const ::grpc::internal::RpcMethod rpcmethod_WatchedWRAMDidChange_;
   };
   static std::unique_ptr<Stub> NewStub(const std::shared_ptr< ::grpc::ChannelInterface>& channel, const ::grpc::StubOptions& options = ::grpc::StubOptions());
 
@@ -93,7 +153,14 @@ class ControlService final {
    public:
     Service();
     virtual ~Service();
-    virtual ::grpc::Status ListenSetWRAM(::grpc::ServerContext* context, const ::google::protobuf::Empty* request, ::grpc::ServerWriter< ::SetWRAM>* writer);
+    // / Listen for the server to instruct the emulator to set bytes in WRAM
+    virtual ::grpc::Status ListenSetWRAM(::grpc::ServerContext* context, const ::google::protobuf::Empty* request, ::grpc::ServerWriter< ::WRAMByteRange>* writer);
+    // / Listen for the server to instruct the emulator to watch a set of byte ranges
+    // / for changes and call the server on change. When a new `WatchedWRAM` is returned
+    // / by the server, stop watching previous ranges.
+    virtual ::grpc::Status ListenWatchWRAM(::grpc::ServerContext* context, const ::google::protobuf::Empty* request, ::grpc::ServerWriter< ::WatchedWRAM>* writer);
+    // / Send watched byte ranges to the server
+    virtual ::grpc::Status WatchedWRAMDidChange(::grpc::ServerContext* context, const ::WRAMByteRange* request, ::google::protobuf::Empty* response);
   };
   template <class BaseClass>
   class WithAsyncMethod_ListenSetWRAM : public BaseClass {
@@ -107,15 +174,55 @@ class ControlService final {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status ListenSetWRAM(::grpc::ServerContext* /*context*/, const ::google::protobuf::Empty* /*request*/, ::grpc::ServerWriter< ::SetWRAM>* /*writer*/) override {
+    ::grpc::Status ListenSetWRAM(::grpc::ServerContext* /*context*/, const ::google::protobuf::Empty* /*request*/, ::grpc::ServerWriter< ::WRAMByteRange>* /*writer*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
-    void RequestListenSetWRAM(::grpc::ServerContext* context, ::google::protobuf::Empty* request, ::grpc::ServerAsyncWriter< ::SetWRAM>* writer, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+    void RequestListenSetWRAM(::grpc::ServerContext* context, ::google::protobuf::Empty* request, ::grpc::ServerAsyncWriter< ::WRAMByteRange>* writer, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
       ::grpc::Service::RequestAsyncServerStreaming(0, context, request, writer, new_call_cq, notification_cq, tag);
     }
   };
-  typedef WithAsyncMethod_ListenSetWRAM<Service > AsyncService;
+  template <class BaseClass>
+  class WithAsyncMethod_ListenWatchWRAM : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithAsyncMethod_ListenWatchWRAM() {
+      ::grpc::Service::MarkMethodAsync(1);
+    }
+    ~WithAsyncMethod_ListenWatchWRAM() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status ListenWatchWRAM(::grpc::ServerContext* /*context*/, const ::google::protobuf::Empty* /*request*/, ::grpc::ServerWriter< ::WatchedWRAM>* /*writer*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    void RequestListenWatchWRAM(::grpc::ServerContext* context, ::google::protobuf::Empty* request, ::grpc::ServerAsyncWriter< ::WatchedWRAM>* writer, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+      ::grpc::Service::RequestAsyncServerStreaming(1, context, request, writer, new_call_cq, notification_cq, tag);
+    }
+  };
+  template <class BaseClass>
+  class WithAsyncMethod_WatchedWRAMDidChange : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithAsyncMethod_WatchedWRAMDidChange() {
+      ::grpc::Service::MarkMethodAsync(2);
+    }
+    ~WithAsyncMethod_WatchedWRAMDidChange() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status WatchedWRAMDidChange(::grpc::ServerContext* /*context*/, const ::WRAMByteRange* /*request*/, ::google::protobuf::Empty* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    void RequestWatchedWRAMDidChange(::grpc::ServerContext* context, ::WRAMByteRange* request, ::grpc::ServerAsyncResponseWriter< ::google::protobuf::Empty>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+      ::grpc::Service::RequestAsyncUnary(2, context, request, response, new_call_cq, notification_cq, tag);
+    }
+  };
+  typedef WithAsyncMethod_ListenSetWRAM<WithAsyncMethod_ListenWatchWRAM<WithAsyncMethod_WatchedWRAMDidChange<Service > > > AsyncService;
   template <class BaseClass>
   class WithCallbackMethod_ListenSetWRAM : public BaseClass {
    private:
@@ -123,7 +230,7 @@ class ControlService final {
    public:
     WithCallbackMethod_ListenSetWRAM() {
       ::grpc::Service::MarkMethodCallback(0,
-          new ::grpc::internal::CallbackServerStreamingHandler< ::google::protobuf::Empty, ::SetWRAM>(
+          new ::grpc::internal::CallbackServerStreamingHandler< ::google::protobuf::Empty, ::WRAMByteRange>(
             [this](
                    ::grpc::CallbackServerContext* context, const ::google::protobuf::Empty* request) { return this->ListenSetWRAM(context, request); }));
     }
@@ -131,14 +238,63 @@ class ControlService final {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status ListenSetWRAM(::grpc::ServerContext* /*context*/, const ::google::protobuf::Empty* /*request*/, ::grpc::ServerWriter< ::SetWRAM>* /*writer*/) override {
+    ::grpc::Status ListenSetWRAM(::grpc::ServerContext* /*context*/, const ::google::protobuf::Empty* /*request*/, ::grpc::ServerWriter< ::WRAMByteRange>* /*writer*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
-    virtual ::grpc::ServerWriteReactor< ::SetWRAM>* ListenSetWRAM(
+    virtual ::grpc::ServerWriteReactor< ::WRAMByteRange>* ListenSetWRAM(
       ::grpc::CallbackServerContext* /*context*/, const ::google::protobuf::Empty* /*request*/)  { return nullptr; }
   };
-  typedef WithCallbackMethod_ListenSetWRAM<Service > CallbackService;
+  template <class BaseClass>
+  class WithCallbackMethod_ListenWatchWRAM : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithCallbackMethod_ListenWatchWRAM() {
+      ::grpc::Service::MarkMethodCallback(1,
+          new ::grpc::internal::CallbackServerStreamingHandler< ::google::protobuf::Empty, ::WatchedWRAM>(
+            [this](
+                   ::grpc::CallbackServerContext* context, const ::google::protobuf::Empty* request) { return this->ListenWatchWRAM(context, request); }));
+    }
+    ~WithCallbackMethod_ListenWatchWRAM() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status ListenWatchWRAM(::grpc::ServerContext* /*context*/, const ::google::protobuf::Empty* /*request*/, ::grpc::ServerWriter< ::WatchedWRAM>* /*writer*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    virtual ::grpc::ServerWriteReactor< ::WatchedWRAM>* ListenWatchWRAM(
+      ::grpc::CallbackServerContext* /*context*/, const ::google::protobuf::Empty* /*request*/)  { return nullptr; }
+  };
+  template <class BaseClass>
+  class WithCallbackMethod_WatchedWRAMDidChange : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithCallbackMethod_WatchedWRAMDidChange() {
+      ::grpc::Service::MarkMethodCallback(2,
+          new ::grpc::internal::CallbackUnaryHandler< ::WRAMByteRange, ::google::protobuf::Empty>(
+            [this](
+                   ::grpc::CallbackServerContext* context, const ::WRAMByteRange* request, ::google::protobuf::Empty* response) { return this->WatchedWRAMDidChange(context, request, response); }));}
+    void SetMessageAllocatorFor_WatchedWRAMDidChange(
+        ::grpc::MessageAllocator< ::WRAMByteRange, ::google::protobuf::Empty>* allocator) {
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(2);
+      static_cast<::grpc::internal::CallbackUnaryHandler< ::WRAMByteRange, ::google::protobuf::Empty>*>(handler)
+              ->SetMessageAllocator(allocator);
+    }
+    ~WithCallbackMethod_WatchedWRAMDidChange() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status WatchedWRAMDidChange(::grpc::ServerContext* /*context*/, const ::WRAMByteRange* /*request*/, ::google::protobuf::Empty* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    virtual ::grpc::ServerUnaryReactor* WatchedWRAMDidChange(
+      ::grpc::CallbackServerContext* /*context*/, const ::WRAMByteRange* /*request*/, ::google::protobuf::Empty* /*response*/)  { return nullptr; }
+  };
+  typedef WithCallbackMethod_ListenSetWRAM<WithCallbackMethod_ListenWatchWRAM<WithCallbackMethod_WatchedWRAMDidChange<Service > > > CallbackService;
   typedef CallbackService ExperimentalCallbackService;
   template <class BaseClass>
   class WithGenericMethod_ListenSetWRAM : public BaseClass {
@@ -152,7 +308,41 @@ class ControlService final {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status ListenSetWRAM(::grpc::ServerContext* /*context*/, const ::google::protobuf::Empty* /*request*/, ::grpc::ServerWriter< ::SetWRAM>* /*writer*/) override {
+    ::grpc::Status ListenSetWRAM(::grpc::ServerContext* /*context*/, const ::google::protobuf::Empty* /*request*/, ::grpc::ServerWriter< ::WRAMByteRange>* /*writer*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+  };
+  template <class BaseClass>
+  class WithGenericMethod_ListenWatchWRAM : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithGenericMethod_ListenWatchWRAM() {
+      ::grpc::Service::MarkMethodGeneric(1);
+    }
+    ~WithGenericMethod_ListenWatchWRAM() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status ListenWatchWRAM(::grpc::ServerContext* /*context*/, const ::google::protobuf::Empty* /*request*/, ::grpc::ServerWriter< ::WatchedWRAM>* /*writer*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+  };
+  template <class BaseClass>
+  class WithGenericMethod_WatchedWRAMDidChange : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithGenericMethod_WatchedWRAMDidChange() {
+      ::grpc::Service::MarkMethodGeneric(2);
+    }
+    ~WithGenericMethod_WatchedWRAMDidChange() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status WatchedWRAMDidChange(::grpc::ServerContext* /*context*/, const ::WRAMByteRange* /*request*/, ::google::protobuf::Empty* /*response*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
@@ -169,12 +359,52 @@ class ControlService final {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status ListenSetWRAM(::grpc::ServerContext* /*context*/, const ::google::protobuf::Empty* /*request*/, ::grpc::ServerWriter< ::SetWRAM>* /*writer*/) override {
+    ::grpc::Status ListenSetWRAM(::grpc::ServerContext* /*context*/, const ::google::protobuf::Empty* /*request*/, ::grpc::ServerWriter< ::WRAMByteRange>* /*writer*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     void RequestListenSetWRAM(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncWriter< ::grpc::ByteBuffer>* writer, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
       ::grpc::Service::RequestAsyncServerStreaming(0, context, request, writer, new_call_cq, notification_cq, tag);
+    }
+  };
+  template <class BaseClass>
+  class WithRawMethod_ListenWatchWRAM : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithRawMethod_ListenWatchWRAM() {
+      ::grpc::Service::MarkMethodRaw(1);
+    }
+    ~WithRawMethod_ListenWatchWRAM() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status ListenWatchWRAM(::grpc::ServerContext* /*context*/, const ::google::protobuf::Empty* /*request*/, ::grpc::ServerWriter< ::WatchedWRAM>* /*writer*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    void RequestListenWatchWRAM(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncWriter< ::grpc::ByteBuffer>* writer, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+      ::grpc::Service::RequestAsyncServerStreaming(1, context, request, writer, new_call_cq, notification_cq, tag);
+    }
+  };
+  template <class BaseClass>
+  class WithRawMethod_WatchedWRAMDidChange : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithRawMethod_WatchedWRAMDidChange() {
+      ::grpc::Service::MarkMethodRaw(2);
+    }
+    ~WithRawMethod_WatchedWRAMDidChange() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status WatchedWRAMDidChange(::grpc::ServerContext* /*context*/, const ::WRAMByteRange* /*request*/, ::google::protobuf::Empty* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    void RequestWatchedWRAMDidChange(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncResponseWriter< ::grpc::ByteBuffer>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+      ::grpc::Service::RequestAsyncUnary(2, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
   template <class BaseClass>
@@ -192,14 +422,85 @@ class ControlService final {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status ListenSetWRAM(::grpc::ServerContext* /*context*/, const ::google::protobuf::Empty* /*request*/, ::grpc::ServerWriter< ::SetWRAM>* /*writer*/) override {
+    ::grpc::Status ListenSetWRAM(::grpc::ServerContext* /*context*/, const ::google::protobuf::Empty* /*request*/, ::grpc::ServerWriter< ::WRAMByteRange>* /*writer*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     virtual ::grpc::ServerWriteReactor< ::grpc::ByteBuffer>* ListenSetWRAM(
       ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/)  { return nullptr; }
   };
-  typedef Service StreamedUnaryService;
+  template <class BaseClass>
+  class WithRawCallbackMethod_ListenWatchWRAM : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithRawCallbackMethod_ListenWatchWRAM() {
+      ::grpc::Service::MarkMethodRawCallback(1,
+          new ::grpc::internal::CallbackServerStreamingHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
+            [this](
+                   ::grpc::CallbackServerContext* context, const::grpc::ByteBuffer* request) { return this->ListenWatchWRAM(context, request); }));
+    }
+    ~WithRawCallbackMethod_ListenWatchWRAM() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status ListenWatchWRAM(::grpc::ServerContext* /*context*/, const ::google::protobuf::Empty* /*request*/, ::grpc::ServerWriter< ::WatchedWRAM>* /*writer*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    virtual ::grpc::ServerWriteReactor< ::grpc::ByteBuffer>* ListenWatchWRAM(
+      ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/)  { return nullptr; }
+  };
+  template <class BaseClass>
+  class WithRawCallbackMethod_WatchedWRAMDidChange : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithRawCallbackMethod_WatchedWRAMDidChange() {
+      ::grpc::Service::MarkMethodRawCallback(2,
+          new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
+            [this](
+                   ::grpc::CallbackServerContext* context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response) { return this->WatchedWRAMDidChange(context, request, response); }));
+    }
+    ~WithRawCallbackMethod_WatchedWRAMDidChange() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status WatchedWRAMDidChange(::grpc::ServerContext* /*context*/, const ::WRAMByteRange* /*request*/, ::google::protobuf::Empty* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    virtual ::grpc::ServerUnaryReactor* WatchedWRAMDidChange(
+      ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)  { return nullptr; }
+  };
+  template <class BaseClass>
+  class WithStreamedUnaryMethod_WatchedWRAMDidChange : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithStreamedUnaryMethod_WatchedWRAMDidChange() {
+      ::grpc::Service::MarkMethodStreamed(2,
+        new ::grpc::internal::StreamedUnaryHandler<
+          ::WRAMByteRange, ::google::protobuf::Empty>(
+            [this](::grpc::ServerContext* context,
+                   ::grpc::ServerUnaryStreamer<
+                     ::WRAMByteRange, ::google::protobuf::Empty>* streamer) {
+                       return this->StreamedWatchedWRAMDidChange(context,
+                         streamer);
+                  }));
+    }
+    ~WithStreamedUnaryMethod_WatchedWRAMDidChange() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable regular version of this method
+    ::grpc::Status WatchedWRAMDidChange(::grpc::ServerContext* /*context*/, const ::WRAMByteRange* /*request*/, ::google::protobuf::Empty* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    // replace default version of method with streamed unary
+    virtual ::grpc::Status StreamedWatchedWRAMDidChange(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer< ::WRAMByteRange,::google::protobuf::Empty>* server_unary_streamer) = 0;
+  };
+  typedef WithStreamedUnaryMethod_WatchedWRAMDidChange<Service > StreamedUnaryService;
   template <class BaseClass>
   class WithSplitStreamingMethod_ListenSetWRAM : public BaseClass {
    private:
@@ -208,10 +509,10 @@ class ControlService final {
     WithSplitStreamingMethod_ListenSetWRAM() {
       ::grpc::Service::MarkMethodStreamed(0,
         new ::grpc::internal::SplitServerStreamingHandler<
-          ::google::protobuf::Empty, ::SetWRAM>(
+          ::google::protobuf::Empty, ::WRAMByteRange>(
             [this](::grpc::ServerContext* context,
                    ::grpc::ServerSplitStreamer<
-                     ::google::protobuf::Empty, ::SetWRAM>* streamer) {
+                     ::google::protobuf::Empty, ::WRAMByteRange>* streamer) {
                        return this->StreamedListenSetWRAM(context,
                          streamer);
                   }));
@@ -220,15 +521,42 @@ class ControlService final {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable regular version of this method
-    ::grpc::Status ListenSetWRAM(::grpc::ServerContext* /*context*/, const ::google::protobuf::Empty* /*request*/, ::grpc::ServerWriter< ::SetWRAM>* /*writer*/) override {
+    ::grpc::Status ListenSetWRAM(::grpc::ServerContext* /*context*/, const ::google::protobuf::Empty* /*request*/, ::grpc::ServerWriter< ::WRAMByteRange>* /*writer*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     // replace default version of method with split streamed
-    virtual ::grpc::Status StreamedListenSetWRAM(::grpc::ServerContext* context, ::grpc::ServerSplitStreamer< ::google::protobuf::Empty,::SetWRAM>* server_split_streamer) = 0;
+    virtual ::grpc::Status StreamedListenSetWRAM(::grpc::ServerContext* context, ::grpc::ServerSplitStreamer< ::google::protobuf::Empty,::WRAMByteRange>* server_split_streamer) = 0;
   };
-  typedef WithSplitStreamingMethod_ListenSetWRAM<Service > SplitStreamedService;
-  typedef WithSplitStreamingMethod_ListenSetWRAM<Service > StreamedService;
+  template <class BaseClass>
+  class WithSplitStreamingMethod_ListenWatchWRAM : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithSplitStreamingMethod_ListenWatchWRAM() {
+      ::grpc::Service::MarkMethodStreamed(1,
+        new ::grpc::internal::SplitServerStreamingHandler<
+          ::google::protobuf::Empty, ::WatchedWRAM>(
+            [this](::grpc::ServerContext* context,
+                   ::grpc::ServerSplitStreamer<
+                     ::google::protobuf::Empty, ::WatchedWRAM>* streamer) {
+                       return this->StreamedListenWatchWRAM(context,
+                         streamer);
+                  }));
+    }
+    ~WithSplitStreamingMethod_ListenWatchWRAM() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable regular version of this method
+    ::grpc::Status ListenWatchWRAM(::grpc::ServerContext* /*context*/, const ::google::protobuf::Empty* /*request*/, ::grpc::ServerWriter< ::WatchedWRAM>* /*writer*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    // replace default version of method with split streamed
+    virtual ::grpc::Status StreamedListenWatchWRAM(::grpc::ServerContext* context, ::grpc::ServerSplitStreamer< ::google::protobuf::Empty,::WatchedWRAM>* server_split_streamer) = 0;
+  };
+  typedef WithSplitStreamingMethod_ListenSetWRAM<WithSplitStreamingMethod_ListenWatchWRAM<Service > > SplitStreamedService;
+  typedef WithSplitStreamingMethod_ListenSetWRAM<WithSplitStreamingMethod_ListenWatchWRAM<WithStreamedUnaryMethod_WatchedWRAMDidChange<Service > > > StreamedService;
 };
 
 

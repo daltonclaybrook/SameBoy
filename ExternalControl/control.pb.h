@@ -45,33 +45,41 @@ struct TableStruct_control_2eproto {
   static const uint32_t offsets[];
 };
 extern const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_control_2eproto;
-class SetWRAM;
-struct SetWRAMDefaultTypeInternal;
-extern SetWRAMDefaultTypeInternal _SetWRAM_default_instance_;
+class WRAMByteRange;
+struct WRAMByteRangeDefaultTypeInternal;
+extern WRAMByteRangeDefaultTypeInternal _WRAMByteRange_default_instance_;
+class WatchedWRAM;
+struct WatchedWRAMDefaultTypeInternal;
+extern WatchedWRAMDefaultTypeInternal _WatchedWRAM_default_instance_;
+class WatchedWRAMRange;
+struct WatchedWRAMRangeDefaultTypeInternal;
+extern WatchedWRAMRangeDefaultTypeInternal _WatchedWRAMRange_default_instance_;
 PROTOBUF_NAMESPACE_OPEN
-template<> ::SetWRAM* Arena::CreateMaybeMessage<::SetWRAM>(Arena*);
+template<> ::WRAMByteRange* Arena::CreateMaybeMessage<::WRAMByteRange>(Arena*);
+template<> ::WatchedWRAM* Arena::CreateMaybeMessage<::WatchedWRAM>(Arena*);
+template<> ::WatchedWRAMRange* Arena::CreateMaybeMessage<::WatchedWRAMRange>(Arena*);
 PROTOBUF_NAMESPACE_CLOSE
 
 // ===================================================================
 
-class SetWRAM final :
-    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:SetWRAM) */ {
+class WRAMByteRange final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:WRAMByteRange) */ {
  public:
-  inline SetWRAM() : SetWRAM(nullptr) {}
-  ~SetWRAM() override;
-  explicit PROTOBUF_CONSTEXPR SetWRAM(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+  inline WRAMByteRange() : WRAMByteRange(nullptr) {}
+  ~WRAMByteRange() override;
+  explicit PROTOBUF_CONSTEXPR WRAMByteRange(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
 
-  SetWRAM(const SetWRAM& from);
-  SetWRAM(SetWRAM&& from) noexcept
-    : SetWRAM() {
+  WRAMByteRange(const WRAMByteRange& from);
+  WRAMByteRange(WRAMByteRange&& from) noexcept
+    : WRAMByteRange() {
     *this = ::std::move(from);
   }
 
-  inline SetWRAM& operator=(const SetWRAM& from) {
+  inline WRAMByteRange& operator=(const WRAMByteRange& from) {
     CopyFrom(from);
     return *this;
   }
-  inline SetWRAM& operator=(SetWRAM&& from) noexcept {
+  inline WRAMByteRange& operator=(WRAMByteRange&& from) noexcept {
     if (this == &from) return *this;
     if (GetOwningArena() == from.GetOwningArena()
   #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
@@ -94,20 +102,20 @@ class SetWRAM final :
   static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
     return default_instance().GetMetadata().reflection;
   }
-  static const SetWRAM& default_instance() {
+  static const WRAMByteRange& default_instance() {
     return *internal_default_instance();
   }
-  static inline const SetWRAM* internal_default_instance() {
-    return reinterpret_cast<const SetWRAM*>(
-               &_SetWRAM_default_instance_);
+  static inline const WRAMByteRange* internal_default_instance() {
+    return reinterpret_cast<const WRAMByteRange*>(
+               &_WRAMByteRange_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
     0;
 
-  friend void swap(SetWRAM& a, SetWRAM& b) {
+  friend void swap(WRAMByteRange& a, WRAMByteRange& b) {
     a.Swap(&b);
   }
-  inline void Swap(SetWRAM* other) {
+  inline void Swap(WRAMByteRange* other) {
     if (other == this) return;
   #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
     if (GetOwningArena() != nullptr &&
@@ -120,7 +128,7 @@ class SetWRAM final :
       ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
     }
   }
-  void UnsafeArenaSwap(SetWRAM* other) {
+  void UnsafeArenaSwap(WRAMByteRange* other) {
     if (other == this) return;
     GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
     InternalSwap(other);
@@ -128,14 +136,14 @@ class SetWRAM final :
 
   // implements Message ----------------------------------------------
 
-  SetWRAM* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final {
-    return CreateMaybeMessage<SetWRAM>(arena);
+  WRAMByteRange* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<WRAMByteRange>(arena);
   }
   using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
-  void CopyFrom(const SetWRAM& from);
+  void CopyFrom(const WRAMByteRange& from);
   using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
-  void MergeFrom( const SetWRAM& from) {
-    SetWRAM::MergeImpl(*this, from);
+  void MergeFrom( const WRAMByteRange& from) {
+    WRAMByteRange::MergeImpl(*this, from);
   }
   private:
   static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg);
@@ -153,15 +161,15 @@ class SetWRAM final :
   void SharedCtor(::PROTOBUF_NAMESPACE_ID::Arena* arena, bool is_message_owned);
   void SharedDtor();
   void SetCachedSize(int size) const final;
-  void InternalSwap(SetWRAM* other);
+  void InternalSwap(WRAMByteRange* other);
 
   private:
   friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
   static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
-    return "SetWRAM";
+    return "WRAMByteRange";
   }
   protected:
-  explicit SetWRAM(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+  explicit WRAMByteRange(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                        bool is_message_owned = false);
   public:
 
@@ -211,7 +219,7 @@ class SetWRAM final :
   void _internal_set_byte_offset(uint32_t value);
   public:
 
-  // @@protoc_insertion_point(class_scope:SetWRAM)
+  // @@protoc_insertion_point(class_scope:WRAMByteRange)
  private:
   class _Internal;
 
@@ -227,6 +235,333 @@ class SetWRAM final :
   union { Impl_ _impl_; };
   friend struct ::TableStruct_control_2eproto;
 };
+// -------------------------------------------------------------------
+
+class WatchedWRAM final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:WatchedWRAM) */ {
+ public:
+  inline WatchedWRAM() : WatchedWRAM(nullptr) {}
+  ~WatchedWRAM() override;
+  explicit PROTOBUF_CONSTEXPR WatchedWRAM(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  WatchedWRAM(const WatchedWRAM& from);
+  WatchedWRAM(WatchedWRAM&& from) noexcept
+    : WatchedWRAM() {
+    *this = ::std::move(from);
+  }
+
+  inline WatchedWRAM& operator=(const WatchedWRAM& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline WatchedWRAM& operator=(WatchedWRAM&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()
+  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
+        && GetOwningArena() != nullptr
+  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
+    ) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const WatchedWRAM& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const WatchedWRAM* internal_default_instance() {
+    return reinterpret_cast<const WatchedWRAM*>(
+               &_WatchedWRAM_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    1;
+
+  friend void swap(WatchedWRAM& a, WatchedWRAM& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(WatchedWRAM* other) {
+    if (other == this) return;
+  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() != nullptr &&
+        GetOwningArena() == other->GetOwningArena()) {
+   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() == other->GetOwningArena()) {
+  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(WatchedWRAM* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  WatchedWRAM* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<WatchedWRAM>(arena);
+  }
+  using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
+  void CopyFrom(const WatchedWRAM& from);
+  using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
+  void MergeFrom( const WatchedWRAM& from) {
+    WatchedWRAM::MergeImpl(*this, from);
+  }
+  private:
+  static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  uint8_t* _InternalSerialize(
+      uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::PROTOBUF_NAMESPACE_ID::Arena* arena, bool is_message_owned);
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(WatchedWRAM* other);
+
+  private:
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "WatchedWRAM";
+  }
+  protected:
+  explicit WatchedWRAM(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                       bool is_message_owned = false);
+  public:
+
+  static const ClassData _class_data_;
+  const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetClassData() const final;
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kRangesFieldNumber = 1,
+  };
+  // repeated .WatchedWRAMRange ranges = 1;
+  int ranges_size() const;
+  private:
+  int _internal_ranges_size() const;
+  public:
+  void clear_ranges();
+  ::WatchedWRAMRange* mutable_ranges(int index);
+  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::WatchedWRAMRange >*
+      mutable_ranges();
+  private:
+  const ::WatchedWRAMRange& _internal_ranges(int index) const;
+  ::WatchedWRAMRange* _internal_add_ranges();
+  public:
+  const ::WatchedWRAMRange& ranges(int index) const;
+  ::WatchedWRAMRange* add_ranges();
+  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::WatchedWRAMRange >&
+      ranges() const;
+
+  // @@protoc_insertion_point(class_scope:WatchedWRAM)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  struct Impl_ {
+    ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::WatchedWRAMRange > ranges_;
+    mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_control_2eproto;
+};
+// -------------------------------------------------------------------
+
+class WatchedWRAMRange final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:WatchedWRAMRange) */ {
+ public:
+  inline WatchedWRAMRange() : WatchedWRAMRange(nullptr) {}
+  ~WatchedWRAMRange() override;
+  explicit PROTOBUF_CONSTEXPR WatchedWRAMRange(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  WatchedWRAMRange(const WatchedWRAMRange& from);
+  WatchedWRAMRange(WatchedWRAMRange&& from) noexcept
+    : WatchedWRAMRange() {
+    *this = ::std::move(from);
+  }
+
+  inline WatchedWRAMRange& operator=(const WatchedWRAMRange& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline WatchedWRAMRange& operator=(WatchedWRAMRange&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()
+  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
+        && GetOwningArena() != nullptr
+  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
+    ) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const WatchedWRAMRange& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const WatchedWRAMRange* internal_default_instance() {
+    return reinterpret_cast<const WatchedWRAMRange*>(
+               &_WatchedWRAMRange_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    2;
+
+  friend void swap(WatchedWRAMRange& a, WatchedWRAMRange& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(WatchedWRAMRange* other) {
+    if (other == this) return;
+  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() != nullptr &&
+        GetOwningArena() == other->GetOwningArena()) {
+   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() == other->GetOwningArena()) {
+  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(WatchedWRAMRange* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  WatchedWRAMRange* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<WatchedWRAMRange>(arena);
+  }
+  using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
+  void CopyFrom(const WatchedWRAMRange& from);
+  using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
+  void MergeFrom( const WatchedWRAMRange& from) {
+    WatchedWRAMRange::MergeImpl(*this, from);
+  }
+  private:
+  static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  uint8_t* _InternalSerialize(
+      uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::PROTOBUF_NAMESPACE_ID::Arena* arena, bool is_message_owned);
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(WatchedWRAMRange* other);
+
+  private:
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "WatchedWRAMRange";
+  }
+  protected:
+  explicit WatchedWRAMRange(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                       bool is_message_owned = false);
+  public:
+
+  static const ClassData _class_data_;
+  const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetClassData() const final;
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kBankFieldNumber = 1,
+    kByteOffsetFieldNumber = 2,
+    kByteLengthFieldNumber = 3,
+  };
+  // uint32 bank = 1;
+  void clear_bank();
+  uint32_t bank() const;
+  void set_bank(uint32_t value);
+  private:
+  uint32_t _internal_bank() const;
+  void _internal_set_bank(uint32_t value);
+  public:
+
+  // uint32 byte_offset = 2;
+  void clear_byte_offset();
+  uint32_t byte_offset() const;
+  void set_byte_offset(uint32_t value);
+  private:
+  uint32_t _internal_byte_offset() const;
+  void _internal_set_byte_offset(uint32_t value);
+  public:
+
+  // uint32 byte_length = 3;
+  void clear_byte_length();
+  uint32_t byte_length() const;
+  void set_byte_length(uint32_t value);
+  private:
+  uint32_t _internal_byte_length() const;
+  void _internal_set_byte_length(uint32_t value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:WatchedWRAMRange)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  struct Impl_ {
+    uint32_t bank_;
+    uint32_t byte_offset_;
+    uint32_t byte_length_;
+    mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_control_2eproto;
+};
 // ===================================================================
 
 
@@ -236,84 +571,84 @@ class SetWRAM final :
   #pragma GCC diagnostic push
   #pragma GCC diagnostic ignored "-Wstrict-aliasing"
 #endif  // __GNUC__
-// SetWRAM
+// WRAMByteRange
 
 // uint32 bank = 1;
-inline void SetWRAM::clear_bank() {
+inline void WRAMByteRange::clear_bank() {
   _impl_.bank_ = 0u;
 }
-inline uint32_t SetWRAM::_internal_bank() const {
+inline uint32_t WRAMByteRange::_internal_bank() const {
   return _impl_.bank_;
 }
-inline uint32_t SetWRAM::bank() const {
-  // @@protoc_insertion_point(field_get:SetWRAM.bank)
+inline uint32_t WRAMByteRange::bank() const {
+  // @@protoc_insertion_point(field_get:WRAMByteRange.bank)
   return _internal_bank();
 }
-inline void SetWRAM::_internal_set_bank(uint32_t value) {
+inline void WRAMByteRange::_internal_set_bank(uint32_t value) {
   
   _impl_.bank_ = value;
 }
-inline void SetWRAM::set_bank(uint32_t value) {
+inline void WRAMByteRange::set_bank(uint32_t value) {
   _internal_set_bank(value);
-  // @@protoc_insertion_point(field_set:SetWRAM.bank)
+  // @@protoc_insertion_point(field_set:WRAMByteRange.bank)
 }
 
 // uint32 byte_offset = 2;
-inline void SetWRAM::clear_byte_offset() {
+inline void WRAMByteRange::clear_byte_offset() {
   _impl_.byte_offset_ = 0u;
 }
-inline uint32_t SetWRAM::_internal_byte_offset() const {
+inline uint32_t WRAMByteRange::_internal_byte_offset() const {
   return _impl_.byte_offset_;
 }
-inline uint32_t SetWRAM::byte_offset() const {
-  // @@protoc_insertion_point(field_get:SetWRAM.byte_offset)
+inline uint32_t WRAMByteRange::byte_offset() const {
+  // @@protoc_insertion_point(field_get:WRAMByteRange.byte_offset)
   return _internal_byte_offset();
 }
-inline void SetWRAM::_internal_set_byte_offset(uint32_t value) {
+inline void WRAMByteRange::_internal_set_byte_offset(uint32_t value) {
   
   _impl_.byte_offset_ = value;
 }
-inline void SetWRAM::set_byte_offset(uint32_t value) {
+inline void WRAMByteRange::set_byte_offset(uint32_t value) {
   _internal_set_byte_offset(value);
-  // @@protoc_insertion_point(field_set:SetWRAM.byte_offset)
+  // @@protoc_insertion_point(field_set:WRAMByteRange.byte_offset)
 }
 
 // bytes bytes = 3;
-inline void SetWRAM::clear_bytes() {
+inline void WRAMByteRange::clear_bytes() {
   _impl_.bytes_.ClearToEmpty();
 }
-inline const std::string& SetWRAM::bytes() const {
-  // @@protoc_insertion_point(field_get:SetWRAM.bytes)
+inline const std::string& WRAMByteRange::bytes() const {
+  // @@protoc_insertion_point(field_get:WRAMByteRange.bytes)
   return _internal_bytes();
 }
 template <typename ArgT0, typename... ArgT>
 inline PROTOBUF_ALWAYS_INLINE
-void SetWRAM::set_bytes(ArgT0&& arg0, ArgT... args) {
+void WRAMByteRange::set_bytes(ArgT0&& arg0, ArgT... args) {
  
  _impl_.bytes_.SetBytes(static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
-  // @@protoc_insertion_point(field_set:SetWRAM.bytes)
+  // @@protoc_insertion_point(field_set:WRAMByteRange.bytes)
 }
-inline std::string* SetWRAM::mutable_bytes() {
+inline std::string* WRAMByteRange::mutable_bytes() {
   std::string* _s = _internal_mutable_bytes();
-  // @@protoc_insertion_point(field_mutable:SetWRAM.bytes)
+  // @@protoc_insertion_point(field_mutable:WRAMByteRange.bytes)
   return _s;
 }
-inline const std::string& SetWRAM::_internal_bytes() const {
+inline const std::string& WRAMByteRange::_internal_bytes() const {
   return _impl_.bytes_.Get();
 }
-inline void SetWRAM::_internal_set_bytes(const std::string& value) {
+inline void WRAMByteRange::_internal_set_bytes(const std::string& value) {
   
   _impl_.bytes_.Set(value, GetArenaForAllocation());
 }
-inline std::string* SetWRAM::_internal_mutable_bytes() {
+inline std::string* WRAMByteRange::_internal_mutable_bytes() {
   
   return _impl_.bytes_.Mutable(GetArenaForAllocation());
 }
-inline std::string* SetWRAM::release_bytes() {
-  // @@protoc_insertion_point(field_release:SetWRAM.bytes)
+inline std::string* WRAMByteRange::release_bytes() {
+  // @@protoc_insertion_point(field_release:WRAMByteRange.bytes)
   return _impl_.bytes_.Release();
 }
-inline void SetWRAM::set_allocated_bytes(std::string* bytes) {
+inline void WRAMByteRange::set_allocated_bytes(std::string* bytes) {
   if (bytes != nullptr) {
     
   } else {
@@ -325,12 +660,124 @@ inline void SetWRAM::set_allocated_bytes(std::string* bytes) {
     _impl_.bytes_.Set("", GetArenaForAllocation());
   }
 #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  // @@protoc_insertion_point(field_set_allocated:SetWRAM.bytes)
+  // @@protoc_insertion_point(field_set_allocated:WRAMByteRange.bytes)
+}
+
+// -------------------------------------------------------------------
+
+// WatchedWRAM
+
+// repeated .WatchedWRAMRange ranges = 1;
+inline int WatchedWRAM::_internal_ranges_size() const {
+  return _impl_.ranges_.size();
+}
+inline int WatchedWRAM::ranges_size() const {
+  return _internal_ranges_size();
+}
+inline void WatchedWRAM::clear_ranges() {
+  _impl_.ranges_.Clear();
+}
+inline ::WatchedWRAMRange* WatchedWRAM::mutable_ranges(int index) {
+  // @@protoc_insertion_point(field_mutable:WatchedWRAM.ranges)
+  return _impl_.ranges_.Mutable(index);
+}
+inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::WatchedWRAMRange >*
+WatchedWRAM::mutable_ranges() {
+  // @@protoc_insertion_point(field_mutable_list:WatchedWRAM.ranges)
+  return &_impl_.ranges_;
+}
+inline const ::WatchedWRAMRange& WatchedWRAM::_internal_ranges(int index) const {
+  return _impl_.ranges_.Get(index);
+}
+inline const ::WatchedWRAMRange& WatchedWRAM::ranges(int index) const {
+  // @@protoc_insertion_point(field_get:WatchedWRAM.ranges)
+  return _internal_ranges(index);
+}
+inline ::WatchedWRAMRange* WatchedWRAM::_internal_add_ranges() {
+  return _impl_.ranges_.Add();
+}
+inline ::WatchedWRAMRange* WatchedWRAM::add_ranges() {
+  ::WatchedWRAMRange* _add = _internal_add_ranges();
+  // @@protoc_insertion_point(field_add:WatchedWRAM.ranges)
+  return _add;
+}
+inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::WatchedWRAMRange >&
+WatchedWRAM::ranges() const {
+  // @@protoc_insertion_point(field_list:WatchedWRAM.ranges)
+  return _impl_.ranges_;
+}
+
+// -------------------------------------------------------------------
+
+// WatchedWRAMRange
+
+// uint32 bank = 1;
+inline void WatchedWRAMRange::clear_bank() {
+  _impl_.bank_ = 0u;
+}
+inline uint32_t WatchedWRAMRange::_internal_bank() const {
+  return _impl_.bank_;
+}
+inline uint32_t WatchedWRAMRange::bank() const {
+  // @@protoc_insertion_point(field_get:WatchedWRAMRange.bank)
+  return _internal_bank();
+}
+inline void WatchedWRAMRange::_internal_set_bank(uint32_t value) {
+  
+  _impl_.bank_ = value;
+}
+inline void WatchedWRAMRange::set_bank(uint32_t value) {
+  _internal_set_bank(value);
+  // @@protoc_insertion_point(field_set:WatchedWRAMRange.bank)
+}
+
+// uint32 byte_offset = 2;
+inline void WatchedWRAMRange::clear_byte_offset() {
+  _impl_.byte_offset_ = 0u;
+}
+inline uint32_t WatchedWRAMRange::_internal_byte_offset() const {
+  return _impl_.byte_offset_;
+}
+inline uint32_t WatchedWRAMRange::byte_offset() const {
+  // @@protoc_insertion_point(field_get:WatchedWRAMRange.byte_offset)
+  return _internal_byte_offset();
+}
+inline void WatchedWRAMRange::_internal_set_byte_offset(uint32_t value) {
+  
+  _impl_.byte_offset_ = value;
+}
+inline void WatchedWRAMRange::set_byte_offset(uint32_t value) {
+  _internal_set_byte_offset(value);
+  // @@protoc_insertion_point(field_set:WatchedWRAMRange.byte_offset)
+}
+
+// uint32 byte_length = 3;
+inline void WatchedWRAMRange::clear_byte_length() {
+  _impl_.byte_length_ = 0u;
+}
+inline uint32_t WatchedWRAMRange::_internal_byte_length() const {
+  return _impl_.byte_length_;
+}
+inline uint32_t WatchedWRAMRange::byte_length() const {
+  // @@protoc_insertion_point(field_get:WatchedWRAMRange.byte_length)
+  return _internal_byte_length();
+}
+inline void WatchedWRAMRange::_internal_set_byte_length(uint32_t value) {
+  
+  _impl_.byte_length_ = value;
+}
+inline void WatchedWRAMRange::set_byte_length(uint32_t value) {
+  _internal_set_byte_length(value);
+  // @@protoc_insertion_point(field_set:WatchedWRAMRange.byte_length)
 }
 
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
 
 // @@protoc_insertion_point(namespace_scope)
 
