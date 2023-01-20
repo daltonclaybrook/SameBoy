@@ -15,30 +15,36 @@ using google::protobuf::Empty;
 
 const string GRPC_SERVER = "localhost:8080";
 
+typedef struct BankAndByteOffset {
+    uint32_t bank;
+    uint32_t byteOffset;
+} BankAndByteOffset;
+
 // State variables
 
 std::thread listenerThread;
 std::shared_ptr<Channel> channel;
-std::mutex setWRAMInfoStackMutex;
-std::vector<SetWRAMInfo> setWRAMInfoStack;
+
+std::mutex bytesMutex;
+std::vector<WatchedWRAMRange> currentWatchedRanges;
+std::map<BankAndByteOffset, std::vector<uint8_t>> latestBytesForOffset;
+
+std::thread senderThread;
 
 // Functions
 
 void _StartListeningOnThread(std::unique_ptr<ControlService::Stub> service) {
     ClientContext context;
-    auto reader = service->ListenSetWRAM(&context, Empty());
+    auto reader = service->ListenWatchWRAM(&context, Empty());
 
-    WRAMByteRange msg;
+    WatchedWRAM msg;
     while (reader->Read(&msg)) {
-        std::lock_guard<std::mutex> lock(setWRAMInfoStackMutex);
-        auto bytesString = msg.bytes();
-        SetWRAMInfo info;
-        info.bank = msg.bank();
-        info.byteCount = bytesString.length();
-        info.byteOffset = msg.byte_offset();
-        info.bytes = (uint8_t *)malloc(sizeof(uint8_t) * info.byteCount);
-        memcpy(info.bytes, bytesString.c_str(), info.byteCount);
-        setWRAMInfoStack.push_back(info);
+        std::lock_guard<std::mutex> lock(bytesMutex);
+        std::vector<WatchedWRAMRange> watchedRanges;
+        for (auto range : msg.ranges()) {
+            watchedRanges.push_back(range);
+        }
+        currentWatchedRanges = watchedRanges;
     }
 }
 
@@ -59,22 +65,53 @@ void StopListeningForWRAMUpdates() {
     channel.swap(nullChannel);
 }
 
-/// Pops an instance of `SetWRAMInfo` off the stack if one is available.
-/// If a null pointer is returned, there are none left on the stack.
-SetWRAMInfo* PopAndCopySetWRAMStack() {
-    std::lock_guard<std::mutex> lock(setWRAMInfoStackMutex);
-    if (setWRAMInfoStack.empty()) {
-        return nullptr;
-    }
-
-    SetWRAMInfo *info = (SetWRAMInfo *)malloc(sizeof(SetWRAMInfo));
-    memcpy(info, &setWRAMInfoStack[0], sizeof(SetWRAMInfo));
-    setWRAMInfoStack.erase(setWRAMInfoStack.begin());
-    return info;
+size_t CountOfWatchedRanges() {
+    std::lock_guard<std::mutex> lock(bytesMutex);
+    return currentWatchedRanges.size();
 }
 
-/// Release an instance of `SetWRAMInfo` returned by `PopAndCopySetWRAMStack`
-void ReleaseSetWRAMInfo(SetWRAMInfo *info) {
-    free(info->bytes);
-    free(info);
+WatchedByteRange GetWatchedByteRange(size_t index) {
+    std::lock_guard<std::mutex> lock(bytesMutex);
+
+    auto _byteRange = currentWatchedRanges[index];
+    WatchedByteRange result;
+    result.bank = _byteRange.bank();
+    result.byteOffset = _byteRange.byte_offset();
+    result.byteLength = _byteRange.byte_length();
+    return result;
+}
+
+void _SendByteRangeOnThread(std::unique_ptr<ControlService::Stub> service, WRAMByteRange byteRange) {
+    ClientContext context;
+    auto status = service->WatchedWRAMDidChange(&context, byteRange, nullptr);
+    if (status.ok() == false) {
+        printf("Invalid status from sending watched WRAM\n");
+    }
+}
+
+void UpdateByteRange(size_t index, uint32_t bank, uint32_t byteOffset, uint32_t byteCount, uint8_t *bytes) {
+    std::lock_guard<std::mutex> lock(bytesMutex);
+
+    std::vector<uint8_t> bytesToSend(bytes, bytes + byteCount);
+    BankAndByteOffset offset;
+    offset.bank = bank;
+    offset.byteOffset = byteOffset;
+
+    if (latestBytesForOffset.count(offset) > 0) {
+        auto latestBytes = latestBytesForOffset.at(offset);
+        if (bytesToSend == latestBytes) {
+            // We have already sent these same bytes. Return early
+            return;
+        }
+    }
+    
+    WRAMByteRange byteRange;
+    byteRange.set_bank(bank);
+    byteRange.set_byte_offset(byteOffset);
+    byteRange.set_bytes(bytes, byteCount);
+
+    auto service = ControlService::NewStub(channel);
+    std::thread _senderThread(_SendByteRangeOnThread, std::move(service), byteRange);
+    senderThread = std::move(_senderThread);
+    latestBytesForOffset.insert_or_assign(offset, bytesToSend);
 }

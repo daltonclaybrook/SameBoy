@@ -10,24 +10,19 @@
 #include <stdio.h>
 #include <stdint.h>
 
-typedef struct SetWRAMInfo {
-    uint64_t byteCount;
-    uint64_t byteOffset;
-    uint8_t *bytes;
+typedef struct WatchedByteRange {
     uint32_t bank;
-} SetWRAMInfo;
+    uint32_t byteOffset;
+    uint32_t byteLength;
+} WatchedByteRange;
 
 /// Open a connection to the gRPC server and listen for updates to WRAM
 EXTERNC void StartListeningForWRAMUpdates();
 /// Close any open gRPC connections
 EXTERNC void StopListeningForWRAMUpdates();
-/// Pops an instance of `SetWRAMInfo` off the stack if one is available.
-/// If a null pointer is returned, there are none left on the stack. If a
-/// non-null pointer is returned, the caller is responsible for managing
-/// the memory of this pointer.
-EXTERNC SetWRAMInfo* PopAndCopySetWRAMStack();
-/// Release an instance of `SetWRAMInfo` returned by `PopAndCopySetWRAMStack`
-EXTERNC void ReleaseSetWRAMInfo(SetWRAMInfo *info);
+EXTERNC size_t CountOfWatchedRanges();
+EXTERNC WatchedByteRange GetWatchedByteRange(size_t index);
+EXTERNC void UpdateByteRange(size_t index, uint32_t bank, uint32_t byteOffset, uint32_t byteCount, uint8_t *bytes);
 
 #undef EXTERNC
 #endif /* CONTROL_H */
