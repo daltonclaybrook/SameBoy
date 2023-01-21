@@ -13,7 +13,7 @@ using grpc::Channel;
 using grpc::ClientContext;
 using google::protobuf::Empty;
 
-const string GRPC_SERVER = "localhost:8080";
+const string GRPC_SERVER = "localhost:8081";
 
 struct BankAndByteOffset {
     uint32_t bank;
