@@ -37,8 +37,6 @@ std::mutex bytesMutex;
 std::vector<WatchedWRAMRange> currentWatchedRanges;
 std::map<BankAndByteOffset, std::vector<uint8_t>> latestBytesForOffset;
 
-std::thread senderThread;
-
 // Functions
 
 void _StartListeningOnThread(std::unique_ptr<ControlService::Stub> service) {
@@ -120,6 +118,6 @@ void UpdateByteRange(size_t index, WatchedByteRange byteRange, uint8_t *bytes) {
 
     auto service = ControlService::NewStub(channel);
     std::thread _senderThread(_SendByteRangeOnThread, std::move(service), _byteRange);
-    senderThread = std::move(_senderThread);
+    _senderThread.detach();
     latestBytesForOffset[offset] = bytesToSend;
 }
