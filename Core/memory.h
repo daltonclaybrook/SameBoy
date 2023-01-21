@@ -21,5 +21,7 @@ internal uint8_t GB_read_oam(GB_gameboy_t *gb, uint8_t addr);
 
 // Exposed for external control
 void GB_write_explicit_banked_ram(GB_gameboy_t *gb, uint16_t addr, uint8_t bank, uint8_t value);
+/// Get a pointer to the WRAM at the provided address and bank
+uint8_t * GB_get_banked_ram_pointer(GB_gameboy_t *gb, uint16_t addr, uint8_t bank);
 
 #endif /* memory_h */

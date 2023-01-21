@@ -20,9 +20,12 @@ typedef struct WatchedByteRange {
 EXTERNC void StartListeningForWRAMUpdates();
 /// Close any open gRPC connections
 EXTERNC void StopListeningForWRAMUpdates();
+/// Get the count of byte ranges that the server is watching
 EXTERNC size_t CountOfWatchedRanges();
+/// Get the watched byte range at the provided index
 EXTERNC WatchedByteRange GetWatchedByteRange(size_t index);
-EXTERNC void UpdateByteRange(size_t index, uint32_t bank, uint32_t byteOffset, uint32_t byteCount, uint8_t *bytes);
+/// Update the server with the provided byte range if necessary
+EXTERNC void UpdateByteRange(size_t index, WatchedByteRange byteRange, uint8_t *bytes);
 
 #undef EXTERNC
 #endif /* CONTROL_H */

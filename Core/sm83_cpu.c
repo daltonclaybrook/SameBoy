@@ -1572,15 +1572,11 @@ static void cb_prefix(GB_gameboy_t *gb, uint8_t opcode)
 
 /// @brief Update WRAM if necessary based on the external control system
 void handle_external_set_wram(GB_gameboy_t *gb) {
-    SetWRAMInfo *info = PopAndCopySetWRAMStack();
-    while (info != NULL) {
-        uint16_t base_addr = 0xC000; // WRAM
-        for (uint16_t i = 0; i < info->byteCount; i++) {
-            GB_write_explicit_banked_ram(gb, base_addr + i, info->bank, info->bytes[i]);
-        }
-
-        ReleaseSetWRAMInfo(info);
-        info = PopAndCopySetWRAMStack();
+    uint16_t base_addr = 0xC000; // WRAM
+    for (size_t i = 0; i < CountOfWatchedRanges(); i++) {
+        WatchedByteRange byteRange = GetWatchedByteRange(i);
+        uint8_t *bytes = GB_get_banked_ram_pointer(gb, base_addr + byteRange.byteOffset, byteRange.bank);
+        UpdateByteRange(i, byteRange, bytes);
     }
 }
 

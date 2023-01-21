@@ -15,10 +15,18 @@ using google::protobuf::Empty;
 
 const string GRPC_SERVER = "localhost:8080";
 
-typedef struct BankAndByteOffset {
+struct BankAndByteOffset {
     uint32_t bank;
     uint32_t byteOffset;
-} BankAndByteOffset;
+
+    bool operator < (const BankAndByteOffset &other) const {
+        if (bank != other.bank) {
+            return bank < other.bank;
+        } else {
+            return byteOffset < other.byteOffset;
+        }
+    }
+};
 
 // State variables
 
@@ -89,13 +97,13 @@ void _SendByteRangeOnThread(std::unique_ptr<ControlService::Stub> service, WRAMB
     }
 }
 
-void UpdateByteRange(size_t index, uint32_t bank, uint32_t byteOffset, uint32_t byteCount, uint8_t *bytes) {
+void UpdateByteRange(size_t index, WatchedByteRange byteRange, uint8_t *bytes) {
     std::lock_guard<std::mutex> lock(bytesMutex);
 
-    std::vector<uint8_t> bytesToSend(bytes, bytes + byteCount);
+    std::vector<uint8_t> bytesToSend(bytes, bytes + byteRange.byteLength);
     BankAndByteOffset offset;
-    offset.bank = bank;
-    offset.byteOffset = byteOffset;
+    offset.bank = byteRange.bank;
+    offset.byteOffset = byteRange.byteOffset;
 
     if (latestBytesForOffset.count(offset) > 0) {
         auto latestBytes = latestBytesForOffset.at(offset);
@@ -105,13 +113,13 @@ void UpdateByteRange(size_t index, uint32_t bank, uint32_t byteOffset, uint32_t 
         }
     }
     
-    WRAMByteRange byteRange;
-    byteRange.set_bank(bank);
-    byteRange.set_byte_offset(byteOffset);
-    byteRange.set_bytes(bytes, byteCount);
+    WRAMByteRange _byteRange;
+    _byteRange.set_bank(byteRange.bank);
+    _byteRange.set_byte_offset(byteRange.byteOffset);
+    _byteRange.set_bytes(bytes, byteRange.byteLength);
 
     auto service = ControlService::NewStub(channel);
-    std::thread _senderThread(_SendByteRangeOnThread, std::move(service), byteRange);
+    std::thread _senderThread(_SendByteRangeOnThread, std::move(service), _byteRange);
     senderThread = std::move(_senderThread);
-    latestBytesForOffset.insert_or_assign(offset, bytesToSend);
+    latestBytesForOffset[offset] = bytesToSend;
 }

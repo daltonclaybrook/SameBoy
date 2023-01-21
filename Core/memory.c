@@ -1280,6 +1280,12 @@ void GB_write_explicit_banked_ram(GB_gameboy_t *gb, uint16_t addr, uint8_t bank,
     gb->ram[(addr & 0x0FFF) + bank * 0x1000] = value;
 }
 
+/// Get a pointer to the WRAM at the provided address and bank
+uint8_t * GB_get_banked_ram_pointer(GB_gameboy_t *gb, uint16_t addr, uint8_t bank)
+{
+    return gb->ram + (addr & 0x0FFF) + bank * 0x1000;
+}
+
 static void write_oam(GB_gameboy_t *gb, uint8_t addr, uint8_t value)
 {
     if (addr < 0xA0) {
