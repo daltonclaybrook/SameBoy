@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <assert.h>
+#include <time.h>
 #include "gb.h"
 #include "../ExternalControl/control.h"
 
@@ -1570,8 +1571,18 @@ static void cb_prefix(GB_gameboy_t *gb, uint8_t opcode)
     }
 }
 
+time_t last_ram_update = 0;
+time_t ram_update_threshold = 5;
+
 /// @brief Update WRAM if necessary based on the external control system
 void handle_external_set_wram(GB_gameboy_t *gb) {
+    time_t current = time(NULL);
+    if (current - last_ram_update < ram_update_threshold) {
+        // Only attempt to update external ram as often as the time threshold is elapsed
+        return;
+    }
+    last_ram_update = current;
+
     uint16_t base_addr = 0xC000; // WRAM
     for (size_t i = 0; i < CountOfWatchedRanges(); i++) {
         WatchedByteRange byteRange = GetWatchedByteRange(i);
