@@ -3,6 +3,7 @@
 #include <mutex>
 #include <grpcpp/grpcpp.h>
 #include <google/protobuf/empty.pb.h>
+#include <fstream>
 
 #include "control.h"
 #include "control.pb.h"
@@ -14,6 +15,11 @@ using grpc::ClientContext;
 using google::protobuf::Empty;
 
 const string GRPC_SERVER = "localhost:8081";
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
+static const std::string slash="\\";
+#else
+static const std::string slash="/";
+#endif
 
 struct BankAndByteOffset {
     uint32_t bank;
@@ -27,6 +33,28 @@ struct BankAndByteOffset {
         }
     }
 };
+
+// Inline helpers
+
+// trim from start (in place)
+static inline void ltrim(std::string &s) {
+    s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](unsigned char ch) {
+        return !std::isspace(ch);
+    }));
+}
+
+// trim from end (in place)
+static inline void rtrim(std::string &s) {
+    s.erase(std::find_if(s.rbegin(), s.rend(), [](unsigned char ch) {
+        return !std::isspace(ch);
+    }).base(), s.end());
+}
+
+// trim from both ends (in place)
+static inline void trim(std::string &s) {
+    rtrim(s);
+    ltrim(s);
+}
 
 // State variables
 
@@ -52,6 +80,24 @@ void _StartListeningOnThread(std::unique_ptr<ControlService::Stub> service) {
         }
         currentWatchedRanges = watchedRanges;
     }
+}
+
+/// Open the emulator config file at the path in the same directory as `romPath`
+void OpenEmulatorConfigNearRomPath(const char *romPath) {
+    std::string _romPath(romPath);
+    auto tokenPath = _romPath.substr(0, _romPath.find_last_of(slash));
+    tokenPath.append(slash);
+    tokenPath.append("emulator_token.txt");
+
+    std::ifstream tokenStream(tokenPath);
+    if (!tokenStream.good()) {
+        printf("Cannot open file at path: %s\n", tokenPath.c_str());
+        return;
+    }
+
+    std::string tokenString((std::istreambuf_iterator<char>(tokenStream)), (std::istreambuf_iterator<char>()));
+    trim(tokenString);
+    printf("Token string: %s\n", tokenString.c_str());
 }
 
 /// Open a connection to the gRPC server and listen for updates to WRAM

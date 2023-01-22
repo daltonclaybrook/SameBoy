@@ -16,6 +16,8 @@ typedef struct WatchedByteRange {
     uint32_t byteLength;
 } WatchedByteRange;
 
+/// Open the emulator config file at the path in the same directory as `romPath`
+EXTERNC void OpenEmulatorConfigNearRomPath(const char *romPath);
 /// Open a connection to the gRPC server and listen for updates to WRAM
 EXTERNC void StartListeningForWRAMUpdates();
 /// Close any open gRPC connections

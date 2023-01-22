@@ -312,6 +312,9 @@ void GB_borrow_sgb_border(GB_gameboy_t *gb)
 
 int GB_load_rom(GB_gameboy_t *gb, const char *path)
 {
+    // External control
+    OpenEmulatorConfigNearRomPath(path);
+
     FILE *f = fopen(path, "rb");
     if (!f) {
         GB_log(gb, "Could not open ROM: %s.\n", strerror(errno));
