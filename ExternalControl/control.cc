@@ -69,6 +69,7 @@ std::map<BankAndByteOffset, std::vector<uint8_t>> latestBytesForOffset;
 
 void _StartListeningOnThread(std::unique_ptr<ControlService::Stub> service) {
     ClientContext context;
+    context.AddMetadata("authorization", "Bearer " + apiToken);
     auto reader = service->ListenWatchWRAM(&context, Empty());
 
     WatchedWRAM msg;
@@ -136,6 +137,7 @@ WatchedByteRange GetWatchedByteRange(size_t index) {
 
 void _SendByteRangeOnThread(std::unique_ptr<ControlService::Stub> service, WRAMByteRange byteRange) {
     ClientContext context;
+    context.AddMetadata("authorization", "Bearer " + apiToken);
     auto status = service->WatchedWRAMDidChange(&context, byteRange, nullptr);
     if (status.ok() == false) {
         printf("Invalid status from sending watched WRAM\n");
