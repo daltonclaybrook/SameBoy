@@ -58,8 +58,8 @@ static inline void trim(std::string &s) {
 
 // State variables
 
-std::thread listenerThread;
 std::shared_ptr<Channel> channel;
+std::string apiToken;
 
 std::mutex bytesMutex;
 std::vector<WatchedWRAMRange> currentWatchedRanges;
@@ -98,6 +98,7 @@ void OpenEmulatorConfigNearRomPath(const char *romPath) {
     std::string tokenString((std::istreambuf_iterator<char>(tokenStream)), (std::istreambuf_iterator<char>()));
     trim(tokenString);
     printf("Token string: %s\n", tokenString.c_str());
+    apiToken = std::move(tokenString);
 }
 
 /// Open a connection to the gRPC server and listen for updates to WRAM
@@ -106,15 +107,15 @@ void StartListeningForWRAMUpdates() {
     channel.swap(_channel);
 
     auto service = ControlService::NewStub(channel);
-    std::thread _listenerThread(_StartListeningOnThread, std::move(service));
-    listenerThread = std::move(_listenerThread);
+    std::thread listenerThread(_StartListeningOnThread, std::move(service));
+    listenerThread.detach();
 }
 
 /// Close any open gRPC connections
 void StopListeningForWRAMUpdates() {
     // Replace the channel with a null one
     std::shared_ptr<Channel> nullChannel;
-    channel.swap(nullChannel);
+    channel = std::move(nullChannel);
 }
 
 size_t CountOfWatchedRanges() {
